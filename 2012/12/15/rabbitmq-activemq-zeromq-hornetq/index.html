@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RabbitMQ, ActiveMQ, ZeroMQ, HornetQ - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">RabbitMQ, ActiveMQ, ZeroMQ, HornetQ</h1>
+    <p class="post-meta">
+      <time datetime="2012-12-15T07:00:00-05:00" itemprop="datePublished">
+        
+        Dec 15, 2012
+      </time>
+      
+      
+        • <span>Categories: Messaging</span>
+      
+      
+        • <span>Tags: activemq, mongodb, python, rabbitmq, stackoverflow, zeromq</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><em>Warning</em>: In this post I’m going to compare <a href="http://www.rabbitmq.com/">RabbitMQ</a>, <a href="http://www.zeromq.org/">ZeroMQ</a>, <a href="http://activemq.apache.org/">ActiveMQ</a>, and <a href="http://www.jboss.org/hornetq">HornetQ</a>. The basis of the comparison is not the performance, or the scalability, or any other serious feature. The comparison is done <em>purely</em> based on the popularity of those systems. Therefore, if you came here to see some performance metrics, you will be disappointed — there is none in this post.</p>
+
+<p><em>Note</em>: To calculate popularity, I’m going to use MongoDB and Python, so if you don’t care about message brokers, but you want to see some examples of MongoDB scripts, this post might be interesting to you.</p>
+
+<!-- more -->
+
+<h2 id="popularity">Popularity</h2>
+
+<p>What is the best messaging system out there? If you read my blog regularly, you probably know my biased answer. But to give an objective answer, we have to compare the candidates based on some criteria. There are many possible criteria, some of which are more relevant to your project than the others. One of them is how popular the candidate solutions are. In other words, if you choose a message broker and then you encounter a problem, how easy would it be to solve it? Is there anybody who can help you? One way to find it out is to check how many people are interested in the same solution. And the obvious way to do it is to ask Google.</p>
+
+<p>Here is the Google trend graph for the last five years. It turns out, my personal preferences coincide with the public interest.</p>
+
+<div class="separator" style="clear: both; text-align: center;"><script type="text/javascript" src="//www.google.ca/trends/embed.js?hl=en-US&amp;q=activemq,+rabbitmq,+zeromq,+hornetq&amp;date=1/2008+60m&amp;cmpt=q&amp;content=1&amp;cid=TIMESERIES_GRAPH_AVERAGES_CHART&amp;export=5&amp;w=800&amp;h=330"></script></div>
+
+<p>At this point I can stop and say “Well, you see who’s the winner”. There are 5 times more people interested in RabbitMQ than HornetQ, so if you bet on Rabbit you have more chances to get the help from your fellow programmers, if you need to.</p>
+
+<p>But before we make the final decision, I want to hear another opinion about the popularity of our candidates. Where do people go nowadays when they have software related problems? Right, they go to…</p>
+
+<h2 id="stackoverflow">StackOverflow</h2>
+
+<p>The best thing about StackOverflow is their <a href="http://api.stackoverflow.com/1.0/usage">REST API</a>. For our purposes we need two API queries: get all <a href="http://api.stackoverflow.com/1.1/usage/methods/search">questions by a tag</a>, and get all <a href="http://api.stackoverflow.com/1.1/usage/methods/question-answers">answers</a> for the question. In fact, the second one is optional. Even the first query alone can give us most of what we want to know:</p>
+
+<ul>
+  <li>how many questions have been posted for every candidate on our list?</li>
+  <li>how many answers did those questions receive?</li>
+  <li>how many answers were accepted?</li>
+  <li>how many questions and answers were marked useful?</li>
+</ul>
+
+<p>When we get all the numbers, we should know what people are actually using. We can also check if there is any correlation between Google data and StackOverflow.</p>
+
+<p>So how do we proceed? We cannot use API directly to run analytics, because we would quickly exhaust the daily quota. What we can do is to fetch the data, save it locally, and run analytics against the local data. Here is another good thing about StackOverflow API: it comes in JSON format. What is the best way to analyze JSON data? Obviously, saving it in a JSON-oriented database that supports aggregated queries. And that’s where MongoDB comes into play.</p>
+
+<p><a href="https://gist.github.com/4276136#file-questions-py">Here</a> is the Python script that downloads all the questions for the specified tags from StackOverflow, and saves the results in the local MongoDB instance. I chose Python because I want to draw some graphs later, which is easy to do in Python. Plus, it’s a simple and expressive language.</p>
+
+<p>After we run this script, we get all the questions we need in our database. The next step is to get all the answers for those questions. <a href="https://gist.github.com/4276136#file-answers-py">Here</a> is the script that does exactly that.</p>
+
+<p>Depends on how many questions we have saved on the first step, there might be quite a lot of queries to run to get all the answers. With my second script I exceeded the daily quota, so I had to wait for the next day to get the rest of the answers.</p>
+
+<p>Now, when we have all the data, let’s take a look how we can use it. Here is a typical StackOverflow record. I highlighted the fields that might be useful for our analysis.</p>
+
+<pre>{
+     "_id" : 269363,
+     <font color="#0000FF">"accepted_answer_id"</font> : 290764,
+     <font color="#0000FF">"answer_count" : 4</font>,
+     "answers" : [
+          ...
+          {
+               "view_count" : 0,
+               "answer_comments_url" : "/answers/303710/comments",
+               "answer_id" : 303710,
+               "title" : "ActiveMQ .net client locks up",
+               "community_owned" : false,
+               "down_vote_count" : 0,
+               "last_activity_date" : 1317300099,
+               "creation_date" : 1227135282,
+               "score" : 1,
+               <font color="#0000FF">"up_vote_count" : 1</font>,
+               "owner" : {
+                    "display_name" : "HitLikeAHammer",
+                    <font color="#0000FF">"reputation" : 1152</font>,
+                    "user_id" : 35165,
+                    "user_type" : "registered",
+                    "email_hash" : "584cd9905db85f744e7e96740b11b7c0"
+               },
+               "accepted" : false,
+               "last_edit_date" : 1317300099,
+               "question_id" : 269363
+          },
+          ...
+     ],
+     "community_owned" : false,
+     "creation_date" : 1225989513,
+     "down_vote_count" : 0,
+     "favorite_count" : 1,
+     "last_activity_date" : 1317300112,
+     "owner" : {
+          "display_name" : "HitLikeAHammer",
+          "reputation" : 1152,
+          "user_id" : 35165,
+          "user_type" : "registered",
+          "email_hash" : "584cd9905db85f744e7e96740b11b7c0"
+     },
+     "question_answers_url" : "/questions/269363/answers",
+     "question_comments_url" : "/questions/269363/comments",
+     "question_id" : 269363,
+     "question_timeline_url" : "/questions/269363/timeline",
+     "score" : 1,
+     <font color="#0000FF">"tags" : [
+          ".net",
+          "activemq"
+     ]</font>,
+     "title" : "ActiveMQ .net client locks up",
+     <font color="#0000FF">"up_vote_count" : 1</font>,
+     "view_count" : 1183
+}</pre>
+
+<p>First of all, we want to know how many questions are posted for each messaging system from our list. Here is the MongoDB query for that. The first snippet is a query, the second is the result.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Number of questions</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">,</span> <span class="na">questions</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">questions</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">1039</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">988</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">373</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">185</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>The next query is to get the total number of answers by tag</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Number of answers</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">,</span> <span class="na">answers</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="s1">'$answer_count'</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">answers</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">1382</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">1322</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">572</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">227</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>It seems that the number of answers is proportional to the number of questions. With MongoDB we can quickly verify it.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Answers to questions ratio</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">,</span> <span class="na">answers</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="s1">'$answer_count'</span><span class="p">&#x7d;,</span> <span class="na">questions</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$project</span><span class="p">:&#x7b;</span><span class="na">answers</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">questions</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">ratio</span><span class="p">:&#x7b;</span><span class="na">$divide</span><span class="p">:[</span><span class="s1">'$answers'</span><span class="p">,</span> <span class="s1">'$questions'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">ratio</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">572</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">373</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.5335120643431635</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">1322</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">988</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.3380566801619433</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">1382</span><span class="p">,</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">1039</span><span class="p">,</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.3301251203079885</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"answers"</span> <span class="p">:</span> <span class="mi">227</span><span class="p">,</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">185</span><span class="p">,</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.227027027027027</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>Indeed, the answers/question ratio is almost the same for every tag. That means we can use just the number of questions for our analysis.</p>
+
+<p>Here is the query that calculates the number of <em>accepted</em> answers by tag. Again, it correlates fairly well with the total number of answers and questions.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Number of accepted answers</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">accepted_answer_id</span><span class="p">:&#x7b;</span><span class="na">$ne</span><span class="p">:</span><span class="kc">null</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">,</span> <span class="na">accepted_answers</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">accepted_answers</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"accepted_answers"</span> <span class="p">:</span> <span class="mi">531</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"accepted_answers"</span> <span class="p">:</span> <span class="mi">500</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"accepted_answers"</span> <span class="p">:</span> <span class="mi">221</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"accepted_answers"</span> <span class="p">:</span> <span class="mi">94</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>The next query is more interesting. It calculates the number of question up-votes by tag. In other words, it shows the number of <em>useful</em> questions. If we divide it by the total number of questions, we should see which messaging system has bigger rate of useful questions than others</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Number of useful questions</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">,</span> <span class="na">upvotes</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="s1">'$up_vote_count'</span><span class="p">&#x7d;,</span> <span class="na">questions</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$project</span><span class="p">:&#x7b;</span><span class="na">upvotes</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">questions</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">ratio</span><span class="p">:&#x7b;</span><span class="na">$divide</span><span class="p">:[</span><span class="s1">'$upvotes'</span><span class="p">,</span> <span class="s1">'$questions'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">ratio</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">1078</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">373</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">2.8900804289544237</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">1864</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">988</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.8866396761133604</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">1459</span><span class="p">,</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">1039</span><span class="p">,</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.4042348411934553</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">233</span><span class="p">,</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">185</span><span class="p">,</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.2594594594594595</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>Interesting. The ZeroMQ users seem to ask more useful questions than the users of other brokers.</p>
+
+<p>Let’s do the same analysis for the answers. Here is the query that calculates the number of answer up-votes by tag.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Number of useful answers</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$answers'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">question</span><span class="p">:</span><span class="s1">'$_id'</span><span class="p">,</span> <span class="na">tag</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span> <span class="na">upvotes</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="s1">'$answers.up_vote_count'</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$_id.tag'</span><span class="p">,</span> <span class="na">upvotes</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="s1">'$upvotes'</span><span class="p">&#x7d;,</span> <span class="na">questions</span><span class="p">:&#x7b;</span><span class="na">$sum</span><span class="p">:</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$project</span><span class="p">:&#x7b;</span><span class="na">upvotes</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">questions</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">ratio</span><span class="p">:&#x7b;</span><span class="na">$divide</span><span class="p">:[</span><span class="s1">'$upvotes'</span><span class="p">,</span> <span class="s1">'$questions'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">ratio</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">1469</span><span class="p">,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">338</span><span class="p">,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">4.346153846153846</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">2437</span><span class="p">,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">858</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">2.84032634032634</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">2199</span><span class="p">,</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">902</span><span class="p">,</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">2.4379157427937916</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"upvotes"</span> <span class="p">:</span> <span class="mi">262</span><span class="p">,</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"questions"</span> <span class="p">:</span> <span class="mi">156</span><span class="p">,</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"ratio"</span> <span class="p">:</span> <span class="mf">1.6794871794871795</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>Again, ZeroMQ users post more useful answers than others.</p>
+
+<p>To complete the picture of typical users, let’s run the following query that calculates an average reputation of people that post answers</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Reputation of respondents</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nx">db</span><span class="p">.</span><span class="nx">stackoverflow</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$answers'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$unwind</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">question</span><span class="p">:</span><span class="s1">'$_id'</span><span class="p">,</span> <span class="na">tag</span><span class="p">:</span><span class="s1">'$tags'</span><span class="p">&#x7d;,</span> <span class="na">reputation</span><span class="p">:&#x7b;</span><span class="na">$avg</span><span class="p">:</span><span class="s1">'$answers.owner.reputation'</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$group</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:</span><span class="s1">'$_id.tag'</span><span class="p">,</span> <span class="na">reputation</span><span class="p">:&#x7b;</span><span class="na">$avg</span><span class="p">:</span><span class="s1">'$reputation'</span><span class="p">&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$match</span><span class="p">:&#x7b;</span><span class="na">_id</span><span class="p">:&#x7b;</span><span class="na">$in</span><span class="p">:[</span><span class="s1">'activemq'</span><span class="p">,</span> <span class="s1">'rabbitmq'</span><span class="p">,</span> <span class="s1">'zeromq'</span><span class="p">,</span> <span class="s1">'hornetq'</span><span class="p">]&#x7d;&#x7d;&#x7d;,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span><span class="na">$sort</span><span class="p">:&#x7b;</span><span class="na">reputation</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">&#x7d;&#x7d;</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">])[</span><span class="s1">'result'</span><span class="p">];</span></div></div></pre></div></figure>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"zeromq"</span><span class="p">,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"reputation"</span> <span class="p">:</span> <span class="mf">10088.29552338687</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"activemq"</span><span class="p">,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"reputation"</span> <span class="p">:</span> <span class="mf">7298.7539383380845</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"rabbitmq"</span><span class="p">,</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"reputation"</span> <span class="p">:</span> <span class="mf">6082.172231934734</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;,</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7b;</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"_id"</span> <span class="p">:</span> <span class="s2">"hornetq"</span><span class="p">,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line">          <span class="s2">"reputation"</span> <span class="p">:</span> <span class="mf">3472.9658119658116</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">     <span class="p">&#x7d;</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">]</span></div></div></pre></div></figure>
+
+<p>Wow. ZeroMQ users not only ask more useful questions and give useful answers, they also have higher reputation on average in the StackOverflow community.</p>
+
+<p>As a final exercise, I want to build a graph of question distribution over time. After all, ActiveMQ is the oldest broker, and it might have got more questions just because it was launched first. For this purpose I created <a href="https://gist.github.com/4276136#file-trends-py">this</a> Python script that uses amazing <a href="http://matplotlib.org/gallery.html">matplotlib</a> library. And here is the result for the last 60 months</p>
+
+<p><img class="center" src="/images/posts/mom-trends-so.png" /></p>
+
+<p>It shows that the proportion of interest in different massaging systems was approximately the same all the time. Furthermore, the StackOverflow statistics of this year correlates well with the Google statistics.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<ol>
+  <li>
+    <p>RabbitMQ and ActiveMQ are very popular. If you choose one of them for your messaging infrastructure, you shouldn’t have any problem with the community support. HornetQ might be a good message broker but it definitely lacks the community interest. Finally, as I <a href="/2012/11/12/pycon-canada-2012/#learn">suspected</a> before, ZeroMQ is worth looking at. There are bunch of smart and helpful people in ZeroMQ community.</p>
+  </li>
+  <li>
+    <p>MongoDB is really nice! Its aggregation framework is powerful and easy to use. It was fun playing with it.</p>
+  </li>
+</ol>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

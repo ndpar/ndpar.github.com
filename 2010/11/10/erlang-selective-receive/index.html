@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Erlang explained: Selective receive - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Erlang explained: Selective receive</h1>
+    <p class="post-meta">
+      <time datetime="2010-11-10T07:00:00-05:00" itemprop="datePublished">
+        
+        Nov 10, 2010
+      </time>
+      
+      
+        • <span>Categories: Erlang</span>
+      
+      
+        • <span>Tags: erlang</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>If you worked with Erlang you’ve probably heard about selective receive. In this article I want to demonstrate what selective receive is and how it works. Let me start with an excerpt from Joe Armstrong’s book <a href="http://www.pragprog.com/titles/jaerlang/programming-erlang">Programming Erlang</a> (<a href="http://media.pragprog.com/titles/jaerlang/Concurrent.pdf">Section 8.6</a>, p.155):</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">receive</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">Pattern1</span> <span class="p">[</span><span class="k">when</span> <span class="nv">Guard1</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="nv">Expressions1</span><span class="p">;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">Pattern2</span> <span class="p">[</span><span class="k">when</span> <span class="nv">Guard2</span><span class="p">]</span> <span class="o">-&gt;</span> <span class="nv">Expressions2</span><span class="p">;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">...</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">after</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">Time</span> <span class="o">-&gt;</span> <span class="nv">ExpressionTimeout</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">end</span></div></div></pre></div></figure>
+
+<ol>
+  <li>When we enter a <strong>receive</strong> statement, we start a timer (but only if an <strong>after</strong> section is present in the expression).</li>
+  <li>Take the first message in the mailbox and try to match it against <code class="highlighter-rouge">Pattern1</code>, <code class="highlighter-rouge">Pattern2</code>, and so on. If the match succeeds, the message is removed from the mailbox, and the expressions following the pattern are evaluated.</li>
+  <li>If none of the patterns in the <strong>receive</strong> statement matches the first message in the mailbox, then the first message is removed from the mailbox and put into a “save queue.” The second message in the mailbox is then tried. This procedure is repeated until a matching message is found or until all the messages in the mailbox have been examined.</li>
+  <li>If none of the messages in the mailbox matches, then the process is suspended and will be rescheduled for execution the next time a new message is put in the mailbox. Note that when a new message arrives, the messages in the save queue are not rematched; only the new message is matched.</li>
+  <li>As soon as a message has been matched, then all messages that have been put into the save queue are reentered into the mailbox in the order in which they arrived at the process. If a timer was set, it is cleared.</li>
+  <li>If the timer elapses when we are waiting for a message, then evaluate the expressions <code class="highlighter-rouge">ExpressionsTimeout</code> and put any saved messages back into the mailbox in the order in which they arrived at the process.</li>
+</ol>
+
+<!-- more -->
+
+<p>Did you notice the concept of “save queue”? That’s what many people are not aware of. Let’s run few tests and see the mailbox and the save queue in action.</p>
+
+<p>The first test is simple</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">1</span><span class="o">&gt;</span> <span class="nf">self</span><span class="p">()</span> <span class="o">!</span> <span class="n">a</span><span class="p">.</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">a</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">2</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nf">self</span><span class="p">()).</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">1</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[</span><span class="n">a</span><span class="p">]&#x7d;,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">3</span><span class="o">&gt;</span> <span class="k">receive</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="mi">2</span> <span class="k">end</span><span class="p">.</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">1</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">4</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nf">self</span><span class="p">()).</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">0</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[]&#x7d;,</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span></div></div></pre></div></figure>
+
+<p>We send a message to the shell, we see it in the process mailbox, then we receive it by matching, after which the queue is empty. Standard queue behaviour.</p>
+
+<p>For the next test we send three messages, and we match the last one</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">1</span><span class="o">&gt;</span> <span class="nf">self</span><span class="p">()</span> <span class="o">!</span> <span class="n">c</span><span class="p">,</span> <span class="nf">self</span><span class="p">()</span> <span class="o">!</span> <span class="n">d</span><span class="p">,</span> <span class="nf">self</span><span class="p">()</span> <span class="o">!</span> <span class="n">a</span><span class="p">.</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">a</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">2</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nf">self</span><span class="p">()).</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">3</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">a</span><span class="p">]&#x7d;,</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">3</span><span class="o">&gt;</span> <span class="k">receive</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="mi">2</span> <span class="k">end</span><span class="p">.</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">1</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">4</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nf">self</span><span class="p">()).</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">2</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">]&#x7d;,</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span></div></div></pre></div></figure>
+
+<p>Again, no surprises. In fact, this test demonstrates what people think when they hear about selective receive.</p>
+
+<p>Unfortunately we didn’t see what happened internally between expressions 3 and 4. To find it out we need to modify the test. Let’s start the shell in distributed mode so that we can connect to it later from the remote shell.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nb">register</span><span class="p">(</span><span class="n">shell</span><span class="p">,</span> <span class="nf">self</span><span class="p">()).</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">true</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">shell</span> <span class="o">!</span> <span class="n">c</span><span class="p">,</span> <span class="n">shell</span> <span class="o">!</span> <span class="n">d</span><span class="p">.</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">d</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nb">whereis</span><span class="p">(</span><span class="n">shell</span><span class="p">)).</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">2</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">]&#x7d;,</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="k">receive</span> <span class="n">a</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">b</span> <span class="o">-&gt;</span> <span class="mi">2</span> <span class="k">end</span><span class="p">.</span></div></div></pre></div></figure>
+
+<p>At this moment the shell is suspended, exactly as described in step 4 of selective receive algorithm. Open remote shell, connect to the initial one, and type the following:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nb">whereis</span><span class="p">(</span><span class="n">shell</span><span class="p">)).</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">0</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[]&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span></div></div></pre></div></figure>
+
+<p>That’s interesting: no messages in the mailbox! As Joe said, they are in the save queue. Now send a matching message:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">shell</span> <span class="o">!</span> <span class="n">a</span><span class="p">.</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">a</span></div></div></pre></div></figure>
+
+<p>Go back to initial shell, which should be resumed now, and check the mailbox again:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">1</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="n">foo</span><span class="p">@</span><span class="n">bar</span><span class="p">)</span><span class="mi">5</span><span class="o">&gt;</span> <span class="nb">process_info</span><span class="p">(</span><span class="nb">whereis</span><span class="p">(</span><span class="n">shell</span><span class="p">)).</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">message_queue_len</span><span class="p">,</span><span class="mi">2</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">&#x7b;</span><span class="n">messages</span><span class="p">,[</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">]&#x7d;,</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">...</span></div></div></pre></div></figure>
+
+<p>That’s the same output we saw in the previous test, but now we know what happens behind the scene: <em>messages are moved from the mailbox to the save queue and then back to the mailbox after the matching message arrives</em>.</p>
+
+<p>Next time you explore your Erlang process, keep in mind the save queue and disappearing and reappearing messages.</p>
+
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li>A <a href="https://asciinema.org/a/3477">screencast</a> recorded for this blog entry.</li>
+  <li>Joe Armstrong: <a href="http://www.search-document.com/pdf/3/3/erlang.html">A History of Erlang</a>. In this article you can find why the selective receive was implemented this way.</li>
+</ul>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

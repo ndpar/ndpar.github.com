@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Exporting Solr documents - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Exporting Solr documents</h1>
+    <p class="post-meta">
+      <time datetime="2012-10-01T08:00:00-04:00" itemprop="datePublished">
+        
+        Oct 1, 2012
+      </time>
+      
+      
+        • <span>Categories: Solr</span>
+      
+      
+        • <span>Tags: groovy, solr</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Recently I had to copy some documents from one <a href="http://lucene.apache.org/solr/">Solr</a> server to another. I expected Solr already had an interface that allowed me to extract documents in the same format they were inserted. In that case I would pipe an output of one curl command to another, and consider the job done. As it turned out, the format of Solr input document is different than the output format. Here is how input document looks like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;add&gt;
+    &lt;doc&gt;
+        &lt;field name="id"&gt;12345&lt;/field&gt;
+        &lt;field name="articlestate"&gt;published&lt;/field&gt;
+        &lt;field name="articletype"&gt;news&lt;/field&gt;
+        &lt;field name="body"&gt;Lorem ipsum dolor...&lt;/field&gt;
+        &lt;field name="referenceid"&gt;175820&lt;/field&gt;
+        &lt;field name="referenceid"&gt;163786&lt;/field&gt;
+        &lt;field name="created"&gt;2011-02-15T14:57:54.766Z&lt;/field&gt;
+    &lt;/doc&gt;
+&lt;/add&gt;
+</code></pre></div></div>
+
+<p>Notice the flat structure of this document: all element names are the same regardless of the filed type, and arrays (referenceid) are not grouped. Now compare it to the output format. Here is what you get when you execute a query against a Solr server:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;response&gt;
+    &lt;lst name="responseHeader"&gt;
+        &lt;int name="status"&gt;0&lt;/int&gt;
+        &lt;int name="QTime"&gt;1&lt;/int&gt;
+        &lt;lst name="params"&gt;
+            &lt;str name="q"&gt;id:12345&lt;/str&gt;
+        &lt;/lst&gt;
+    &lt;/lst&gt;
+    &lt;result name="response" numFound="1" start="0"&gt;
+        &lt;doc&gt;
+            &lt;str name="id"&gt;12345&lt;/str&gt;
+            &lt;str name="articlestate"&gt;published&lt;/str&gt;
+            &lt;str name="articletype"&gt;news&lt;/str&gt;
+            &lt;str name="body"&gt;Lorem ipsum dolor...&lt;/str&gt;
+            &lt;arr name="referenceid"&gt;
+                &lt;str&gt;175820&lt;/str&gt;
+                &lt;str&gt;163786&lt;/str&gt;
+            &lt;/arr&gt;
+            &lt;date name="created"&gt;2011-02-15T14:57:54.766Z&lt;/date&gt;
+        &lt;/doc&gt;
+    &lt;/result&gt;
+&lt;/response&gt;
+</code></pre></div></div>
+
+<p>Even if we ignore the response header, the structure of the response/result/doc is not the same as of input document: the element names reflect the types, the arrays are grouped. If you try to add this document to a Solr server, you will get an error “unexpected XML tag”, obviously. I googled for couple hours on how to convert an output document to an input, and, to my surprise, didn’t find any solution. Therefore I implemented my own converter in Groovy, which solved the problem. I post it <a href="http://gist.github.com/3813775">here</a> in case somebody needs it.</p>
+
+<p>Note: You can also use this script to re-index Solr.</p>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

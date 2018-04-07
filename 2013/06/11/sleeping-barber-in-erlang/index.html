@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Sleeping Barber in Erlang - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Sleeping Barber in Erlang</h1>
+    <p class="post-meta">
+      <time datetime="2013-06-11T20:43:00-04:00" itemprop="datePublished">
+        
+        Jun 11, 2013
+      </time>
+      
+      
+        • <span>Categories: Erlang</span>
+      
+      
+        • <span>Tags: erlang</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>After working on <a href="http://en.wikipedia.org/wiki/Sleeping_barber_problem"><em>Sleeping Barber</em></a> problem at <a href="http://www.meetup.com/Toronto-Coding-Dojo/events/120577762/">Coding Dojo</a> I decided to implement it in Erlang. Because Erlang is the perfect language for these sorts of problems, many people have alredy solved it in many different ways. I found at least three groups of solutions: 1) direct implementation using message passing between processes, 2) OTP solution using <em>gen_server</em>, and 3) something resembling object-oriented approach.</p>
+
+<p>Strangely enough, I didn’t see any solution based on <a href="https://en.wikipedia.org/wiki/Finite-state_machine">FSM</a>. That is odd because this is the first thing coming to my mind when I hear this problem. To fill the gap, I’m going to solve it using <em>gen_fsm</em>, which is a standard OTP behaviour for FSM.</p>
+
+<!-- more -->
+
+<h2 id="overview-of-gen_fsm">Overview of gen_fsm</h2>
+
+<p>In essence gen_fsm behaviour is built the same way as a <a href="/2009/11/12/state-machine-in-erlang/">naïve</a> implementation of FSM. It just hides the low-level code that deals with messages and provides integration with OTP framework. An implementation of gen_fsm behaviour consists of three parts</p>
+
+<ul>
+  <li>A <em>client API</em> that calls gen_fsm public interface</li>
+  <li>gen_fsm <em>callbacks</em> required by OTP</li>
+  <li>State <em>transition</em> functions</li>
+</ul>
+
+<p>We’ll see examples of all of them in a minute, but first</p>
+
+<h2 id="dialogue">Dialogue</h2>
+
+<p><em>Barber shop. The Barber is sleeping in the chair. Customer I comes in.</em></p>
+
+<p><em>Customer I.</em> Good morning.<br />
+<em>Barber.</em> Good morning. Please take a seat.</p>
+
+<p><em>Barber starts shaving Customer I. Customer II comes in.</em></p>
+
+<p><em>Customer II.</em> Good morning.<br />
+<em>Barber.</em> I’m busy. You have to wait.<br />
+<em>Customer II.</em> OK.</p>
+
+<p><em>Customer II goes to waiting room. The same happens with Customers III and IV. Customer V comes in.</em></p>
+
+<p><em>Customer V.</em> Good morning.<br />
+<em>Barber.</em> Sorry Customer V. Not today.<br />
+<em>Customer V.</em> Maybe tomorrow.</p>
+
+<p><em>Customer V exits the shop. Meantime Barber finished Customer I’s haircut.</em></p>
+
+<p><em>Barber.</em> Do you like your haircut?<br />
+<em>Customer I.</em> Thank you.<br />
+<em>Barber (looking at Customer II).</em> Next please.</p>
+
+<p><em>The same happens with Customer II, III and IV. After that Barber takes the chair and sleeps.</em></p>
+
+<h2 id="modules">Modules</h2>
+
+<p>From this dialogue we can see we just need to implement two modules: <em>barber</em> and <em>customer</em>.
+I’m not going to show all the functions here in this article, only those that are interesting from gen_fsm perspective.</p>
+
+<p>Let’s start with <em>customer</em> because it’s simpler.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">customer.erl</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">customer</span><span class="p">).</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">behaviour</span><span class="p">(</span><span class="n">gen_fsm</span><span class="p">).</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% API</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">start</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="n">sit_down</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">done</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">wait</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">sorry</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% Callback functions</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">init</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">handle_event</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">handle_sync_event</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">handle_info</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="n">terminate</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">code_change</span><span class="o">/</span><span class="mi">4</span><span class="p">]).</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% FSM states</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">waiting</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">served</span><span class="o">/</span><span class="mi">2</span><span class="p">]).</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% API</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">ok</span><span class="p">,</span><span class="nv">Pid</span><span class="p">&#x7d;</span> <span class="o">=</span> <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">start</span><span class="p">(</span><span class="o">?</span><span class="nv">MODULE</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[]),</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">Pid</span><span class="p">.</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">sit_down</span><span class="p">(</span><span class="nv">Customer</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">send_event</span><span class="p">(</span><span class="nv">Customer</span><span class="p">,</span> <span class="n">sit_down</span><span class="p">).</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">done</span><span class="p">(</span><span class="nv">Customer</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">send_event</span><span class="p">(</span><span class="nv">Customer</span><span class="p">,</span> <span class="nb">exit</span><span class="p">).</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">wait</span><span class="p">(</span><span class="nv">Customer</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">send_event</span><span class="p">(</span><span class="nv">Customer</span><span class="p">,</span> <span class="n">wait</span><span class="p">).</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">sorry</span><span class="p">(</span><span class="nv">Customer</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">send_event</span><span class="p">(</span><span class="nv">Customer</span><span class="p">,</span> <span class="nb">exit</span><span class="p">).</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% gen_fsm callbacks (empty functions are omitted)</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">init</span><span class="p">([])</span> <span class="o">-&gt;</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Good morning."</span><span class="p">),</span>
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">ok</span><span class="p">,</span> <span class="n">waiting</span><span class="p">,</span> <span class="nf">unow</span><span class="p">()&#x7d;.</span>
+</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% FSM states and transitions</span>
+</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">waiting</span><span class="p">(</span><span class="n">sit_down</span><span class="p">,</span> <span class="nv">WaitStart</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"I've been waiting for </span><span class="si">~p</span><span class="s"> sec."</span><span class="p">,</span> <span class="p">[</span><span class="nf">duration</span><span class="p">(</span><span class="nv">WaitStart</span><span class="p">)]),</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">served</span><span class="p">,</span> <span class="nf">unow</span><span class="p">()&#x7d;;</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">waiting</span><span class="p">(</span><span class="n">wait</span><span class="p">,</span> <span class="nv">StateData</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"OK."</span><span class="p">),</span>
+</div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">waiting</span><span class="p">,</span> <span class="nv">StateData</span><span class="p">&#x7d;;</span>
+</div></div><div data-line="47" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="48" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">waiting</span><span class="p">(</span><span class="nb">exit</span><span class="p">,</span> <span class="p">_</span><span class="nv">StateData</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Maybe tomorrow."</span><span class="p">),</span>
+</div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">stop</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">undefined</span><span class="p">&#x7d;.</span>
+</div></div><div data-line="51" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="52" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">served</span><span class="p">(</span><span class="nb">exit</span><span class="p">,</span> <span class="nv">ServiceStart</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Thank you. The haircut took </span><span class="si">~p</span><span class="s"> sec."</span><span class="p">,</span> <span class="p">[</span><span class="nf">duration</span><span class="p">(</span><span class="nv">ServiceStart</span><span class="p">)]),</span>
+</div></div><div data-line="54" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">stop</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">undefined</span><span class="p">&#x7d;.</span></div></div></pre></div></figure>
+
+<p><em>barber</em> module is little bit more complicated, because it not only calls customer’s API, it also sends events to itself.</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">barber.erl</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">barber</span><span class="p">).</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">behaviour</span><span class="p">(</span><span class="n">gen_fsm</span><span class="p">).</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% API</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">start_link</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="n">new_customer</span><span class="o">/</span><span class="mi">1</span><span class="p">]).</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% Callback functions</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">init</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="n">handle_event</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">handle_sync_event</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">handle_info</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">         <span class="n">terminate</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">code_change</span><span class="o">/</span><span class="mi">4</span><span class="p">]).</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% FSM states</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">busy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">sleep</span><span class="o">/</span><span class="mi">2</span><span class="p">]).</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">define</span><span class="p">(</span><span class="no">SERVER</span><span class="p">,</span> <span class="o">?</span><span class="nv">MODULE</span><span class="p">).</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">define</span><span class="p">(</span><span class="no">HAIRCUT_TIME</span><span class="p">,</span> <span class="mi">5000</span><span class="p">).</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">define</span><span class="p">(</span><span class="no">ROOM_SIZE</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">record</span><span class="p">(</span><span class="nl">state</span><span class="p">,</span> <span class="p">&#x7b;</span><span class="n">chair</span><span class="p">,</span> <span class="n">room</span> <span class="o">=</span> <span class="p">[]&#x7d;).</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% API</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">start_link</span><span class="p">()</span> <span class="o">-&gt;</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">start_link</span><span class="p">(&#x7b;</span><span class="n">local</span><span class="p">,</span> <span class="o">?</span><span class="nv">SERVER</span><span class="p">&#x7d;,</span> <span class="o">?</span><span class="nv">MODULE</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[]).</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">new_customer</span><span class="p">(</span><span class="nv">Customer</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">gen_fsm</span><span class="p">:</span><span class="nf">send_event</span><span class="p">(</span><span class="o">?</span><span class="nv">SERVER</span><span class="p">,</span> <span class="p">&#x7b;</span><span class="n">new</span><span class="p">,</span> <span class="nv">Customer</span><span class="p">&#x7d;).</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% gen_fsm callbacks (empty functions are omitted)</span>
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">init</span><span class="p">([])</span> <span class="o">-&gt;</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Shop is open. zzzzZ"</span><span class="p">),</span>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">ok</span><span class="p">,</span> <span class="n">sleep</span><span class="p">,</span> <span class="nl">#state</span><span class="p">&#x7b;&#x7d;&#x7d;.</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">handle_info</span><span class="p">(</span><span class="n">finish</span><span class="p">,</span> <span class="n">busy</span><span class="p">,</span> <span class="nl">#state</span><span class="p">&#x7b;</span><span class="n">chair</span> <span class="o">=</span> <span class="nv">Customer</span><span class="p">,</span> <span class="n">room</span> <span class="o">=</span> <span class="nv">Room</span><span class="p">&#x7d;)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Do you like your haircut </span><span class="si">~p</span><span class="s">?"</span><span class="p">,</span> <span class="p">[</span><span class="nv">Customer</span><span class="p">]),</span>
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">customer</span><span class="p">:</span><span class="nf">done</span><span class="p">(</span><span class="nv">Customer</span><span class="p">),</span>
+</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">case</span> <span class="nv">Room</span> <span class="k">of</span>
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">[</span><span class="nv">C</span> <span class="p">|</span> <span class="nv">Rest</span><span class="p">]</span> <span class="o">-&gt;</span>
+</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">log</span><span class="p">(</span><span class="s">"Next please </span><span class="si">~p</span><span class="s">."</span><span class="p">,</span> <span class="p">[</span><span class="nv">C</span><span class="p">]),</span>
+</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">serving</span><span class="p">(</span><span class="nv">C</span><span class="p">),</span>
+</div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nv">NewStateData</span> <span class="o">=</span> <span class="nl">#state</span><span class="p">&#x7b;</span><span class="n">chair</span> <span class="o">=</span> <span class="nv">C</span><span class="p">,</span> <span class="n">room</span> <span class="o">=</span> <span class="nv">Rest</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">busy</span><span class="p">,</span> <span class="nv">NewStateData</span><span class="p">&#x7d;;</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">[]</span> <span class="o">-&gt;</span>
+</div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">log</span><span class="p">(</span><span class="s">"Time for nap. zzzzZ."</span><span class="p">),</span>
+</div></div><div data-line="45" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">sleep</span><span class="p">,</span> <span class="nl">#state</span><span class="p">&#x7b;&#x7d;&#x7d;</span>
+</div></div><div data-line="46" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">end</span><span class="p">.</span>
+</div></div><div data-line="47" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="48" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">serving</span><span class="p">(</span><span class="nv">Customer</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="49" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">customer</span><span class="p">:</span><span class="nf">sit_down</span><span class="p">(</span><span class="nv">Customer</span><span class="p">),</span>
+</div></div><div data-line="50" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">timer</span><span class="p">:</span><span class="nb">send_after</span><span class="p">(</span><span class="o">?</span><span class="nv">HAIRCUT_TIME</span><span class="p">,</span> <span class="n">finish</span><span class="p">).</span>
+</div></div><div data-line="51" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="52" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%% FSM states and transitions</span>
+</div></div><div data-line="53" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="54" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">sleep</span><span class="p">(&#x7b;</span><span class="n">new</span><span class="p">,</span> <span class="nv">Customer</span><span class="p">&#x7d;,</span> <span class="nv">StateData</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="55" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Good morning </span><span class="si">~p</span><span class="s">. Please take a seat."</span><span class="p">,</span> <span class="p">[</span><span class="nv">Customer</span><span class="p">]),</span>
+</div></div><div data-line="56" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">serving</span><span class="p">(</span><span class="nv">Customer</span><span class="p">),</span>
+</div></div><div data-line="57" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">NewStateData</span> <span class="o">=</span> <span class="nv">StateData</span><span class="nl">#state</span><span class="p">&#x7b;</span><span class="n">chair</span> <span class="o">=</span> <span class="nv">Customer</span><span class="p">&#x7d;,</span>
+</div></div><div data-line="58" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">busy</span><span class="p">,</span> <span class="nv">NewStateData</span><span class="p">&#x7d;.</span>
+</div></div><div data-line="59" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="60" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">busy</span><span class="p">(&#x7b;</span><span class="n">new</span><span class="p">,</span> <span class="nv">Customer</span><span class="p">&#x7d;,</span> <span class="nl">#state</span><span class="p">&#x7b;</span><span class="n">room</span> <span class="o">=</span> <span class="nv">Room</span><span class="p">&#x7d;</span> <span class="o">=</span> <span class="nv">StateData</span><span class="p">)</span>
+</div></div><div data-line="61" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="k">when</span> <span class="nb">length</span><span class="p">(</span><span class="nv">Room</span><span class="p">)</span> <span class="o">==</span> <span class="o">?</span><span class="nv">ROOM_SIZE</span> <span class="o">-&gt;</span>
+</div></div><div data-line="62" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"Sorry </span><span class="si">~p</span><span class="s">. Not today."</span><span class="p">,</span> <span class="p">[</span><span class="nv">Customer</span><span class="p">]),</span>
+</div></div><div data-line="63" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">customer</span><span class="p">:</span><span class="nf">sorry</span><span class="p">(</span><span class="nv">Customer</span><span class="p">),</span>
+</div></div><div data-line="64" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">busy</span><span class="p">,</span> <span class="nv">StateData</span><span class="p">&#x7d;;</span>
+</div></div><div data-line="65" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="66" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">busy</span><span class="p">(&#x7b;</span><span class="n">new</span><span class="p">,</span> <span class="nv">Customer</span><span class="p">&#x7d;,</span> <span class="nl">#state</span><span class="p">&#x7b;</span><span class="n">room</span> <span class="o">=</span> <span class="nv">Room</span><span class="p">&#x7d;</span> <span class="o">=</span> <span class="nv">StateData</span><span class="p">)</span> <span class="o">-&gt;</span>
+</div></div><div data-line="67" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nf">log</span><span class="p">(</span><span class="s">"I'm busy. You have to wait."</span><span class="p">),</span>
+</div></div><div data-line="68" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">customer</span><span class="p">:</span><span class="nf">wait</span><span class="p">(</span><span class="nv">Customer</span><span class="p">),</span>
+</div></div><div data-line="69" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">NewStateData</span> <span class="o">=</span> <span class="nv">StateData</span><span class="nl">#state</span><span class="p">&#x7b;</span><span class="n">room</span> <span class="o">=</span> <span class="nv">Room</span> <span class="o">++</span> <span class="p">[</span><span class="nv">Customer</span><span class="p">]&#x7d;,</span>
+</div></div><div data-line="70" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">&#x7b;</span><span class="n">next_state</span><span class="p">,</span> <span class="n">busy</span><span class="p">,</span> <span class="nv">NewStateData</span><span class="p">&#x7d;.</span></div></div></pre></div></figure>
+
+<p>To reproduce the dialogue above we evaluate the following expressions in the REPL</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">barber</span><span class="p">:</span><span class="nf">start_link</span><span class="p">().</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">barber</span><span class="p">:</span><span class="nf">new_customer</span><span class="p">(</span><span class="nn">customer</span><span class="p">:</span><span class="nf">start</span><span class="p">()).</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">barber</span><span class="p">:</span><span class="nf">new_customer</span><span class="p">(</span><span class="nn">customer</span><span class="p">:</span><span class="nf">start</span><span class="p">()).</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">barber</span><span class="p">:</span><span class="nf">new_customer</span><span class="p">(</span><span class="nn">customer</span><span class="p">:</span><span class="nf">start</span><span class="p">()).</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">barber</span><span class="p">:</span><span class="nf">new_customer</span><span class="p">(</span><span class="nn">customer</span><span class="p">:</span><span class="nf">start</span><span class="p">()).</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nn">barber</span><span class="p">:</span><span class="nf">new_customer</span><span class="p">(</span><span class="nn">customer</span><span class="p">:</span><span class="nf">start</span><span class="p">()).</span></div></div></pre></div></figure>
+
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li><a href="https://github.com/ndpar/erlang/tree/master/barber">Source code</a> for this article.</li>
+  <li><a href="http://ascii.io/a/3613">Screencast</a> reproducing the dialogue.</li>
+  <li><a href="http://www.erlang.org/doc/man/gen_fsm.html">gen_fsm</a> documentation.</li>
+</ul>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

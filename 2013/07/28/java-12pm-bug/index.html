@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>12PM bug in Java - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">12PM bug in Java</h1>
+    <p class="post-meta">
+      <time datetime="2013-07-28T08:00:00-04:00" itemprop="datePublished">
+        
+        Jul 28, 2013
+      </time>
+      
+      
+        • <span>Categories: Java</span>
+      
+      
+        • <span>Tags: java</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>I’ve recently hit on a nasty bug in Java. It sits in <code class="highlighter-rouge">Date</code> class and shows up only at noon!
+I’m going to demonstrate it using Groovy shell, but you can reproduce it in plain Java environment too.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">format</span> <span class="o">=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">SimpleDateFormat</span><span class="o">(</span><span class="s1">'EEE MMM d hh:mm:ss z yyyy'</span><span class="o">)</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= java.text.SimpleDateFormat@fbb27a1c</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">originalDate</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 13:14:15 EDT 2013'</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date</span> <span class="o">=</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">originalDate</span><span class="o">)</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">parsedDate</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">assert</span> <span class="n">originalDate</span> <span class="o">==</span> <span class="n">parsedDate</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= null</span></div></div></pre></div></figure>
+
+<p>So far so good.</p>
+
+<p>I chose a specific formatter on line 1 to make the bug even more evident. With this formatter lines 5, 8, and 11 must be identical on my machine, and they are in this example. The assertion on line 13 also proves the equality.</p>
+
+<p>Now let’s change the example date to one hour earlier</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">originalDate</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 12:14:15 EDT 2013'</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 12:14:15 EDT 2013</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date</span> <span class="o">=</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">originalDate</span><span class="o">)</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 00:14:15 EDT 2013</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">parsedDate</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 00:14:15 EDT 2013</span></div></div></pre></div></figure>
+
+<p>Lines 2, 5, and 8 are not identical any more. The String representation of the date is 12 hours off.</p>
+
+<p>To make sure the problem is in <code class="highlighter-rouge">toString</code> and not in <code class="highlighter-rouge">parse</code>, let’s format the date using formatter</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">format</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">date</span><span class="o">)</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 12:14:15 EDT 2013</span></div></div></pre></div></figure>
+
+<p>Looks good. The problem is in <code class="highlighter-rouge">toString</code> indeed. Or is it?</p>
+
+<p>Let’s parse 13 o’clock date and 12 o’clock date. The difference between them should be 1 hour. In reality</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date13</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 13:14:15 EDT 2013'</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date12</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 12:14:15 EDT 2013'</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 12:14:15 EDT 2013</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">(</span><span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">date13</span><span class="o">).</span><span class="na">time</span> <span class="o">-</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">date12</span><span class="o">).</span><span class="na">time</span><span class="o">)</span> <span class="o">/</span> <span class="o">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="o">)</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= 13</span></div></div></pre></div></figure>
+
+<p>Wow, the problem is actually in <code class="highlighter-rouge">parse</code>. Then how come the <code class="highlighter-rouge">format</code> returned the correct value? That’s still a mystery to me.</p>
+
+<p>I’m actually quite surprised that this bug survived through JDK 1.7.0_09, and neither Sun nor Oracle hasn’t fixed it yet.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

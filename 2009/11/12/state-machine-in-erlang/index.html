@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>State Machine in Erlang - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">State Machine in Erlang</h1>
+    <p class="post-meta">
+      <time datetime="2009-11-12T10:43:00-05:00" itemprop="datePublished">
+        
+        Nov 12, 2009
+      </time>
+      
+      
+        • <span>Categories: Erlang</span>
+      
+      
+        • <span>Tags: erlang</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>There is some sort of confusion in the object-oriented community about functional languages. How is it possible to implement stateful application if the language has no concept of state? It turns out that it’s actually quite possible, although the solution is completely deferent from what we see in the OO realm. In Erlang, for example, state can be implemented by using <em>process message passing</em> and <em>tail recursion</em>. This approach is so elegant that after you’ve learned it, the OO way of doing this looks unnatural. The code below is the Erlang implementation of Uncle Bob’s <a href="http://www.objectmentor.com/resources/articles/umlfsm.pdf">FSM example</a>. Look at it. Isn’t that code clean and expressive? It looks almost like DSL but it’s actually regular Erlang syntax.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">turnstile</span><span class="p">).</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">start</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">coin</span><span class="o">/</span><span class="mi">0</span><span class="p">,</span> <span class="n">pass</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">init</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">register</span><span class="p">(</span><span class="n">turnstile</span><span class="p">,</span> <span class="nb">spawn</span><span class="p">(</span><span class="o">?</span><span class="nv">MODULE</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="p">[])).</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">% Initial state</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">init</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nf">locked</span><span class="p">().</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">% Events</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">coin</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">turnstile</span> <span class="o">!</span> <span class="n">coin</span><span class="p">.</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">pass</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">turnstile</span> <span class="o">!</span> <span class="n">pass</span><span class="p">.</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">% States and transitions</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">locked</span><span class="p">()</span> <span class="o">-&gt;</span>
+</div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">receive</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">pass</span> <span class="o">-&gt;</span>
+</div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">alarm</span><span class="p">(),</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">locked</span><span class="p">();</span>
+</div></div><div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">coin</span> <span class="o">-&gt;</span>
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">unlock</span><span class="p">(),</span>
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">unlocked</span><span class="p">()</span>
+</div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">end</span><span class="p">.</span>
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">unlocked</span><span class="p">()</span> <span class="o">-&gt;</span>
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">receive</span>
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">pass</span> <span class="o">-&gt;</span>
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">lock</span><span class="p">(),</span>
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">locked</span><span class="p">();</span>
+</div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">coin</span> <span class="o">-&gt;</span>
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">thankyou</span><span class="p">(),</span>
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="nf">unlocked</span><span class="p">()</span>
+</div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">end</span><span class="p">.</span>
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">% Actions</span>
+</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">alarm</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">"You shall not pass!</span><span class="si">~n</span><span class="s">"</span><span class="p">).</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">unlock</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">"Unlocking...</span><span class="si">~n</span><span class="s">"</span><span class="p">).</span>
+</div></div><div data-line="43" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">lock</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">"Locking...</span><span class="si">~n</span><span class="s">"</span><span class="p">).</span>
+</div></div><div data-line="44" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">thankyou</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="nf">format</span><span class="p">(</span><span class="s">"Thank you for donation</span><span class="si">~n</span><span class="s">"</span><span class="p">).</span></div></div></pre></div></figure>
+
+<p>The idea behind this code is simple. Every state is implemented as a function that does two things: it listens for messages sent by other processes; when message is received the appropriate action is taken and one of the <em>state-functions called recursively</em>. Simple.</p>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

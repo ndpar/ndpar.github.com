@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title> - page 3 - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <style>
+  .pager { text-align: center; }
+  .pager div.previous { float: left; }
+  .pager div.next { float: right; }
+</style>
+
+<div class="home">
+
+  
+
+  <ul class="post-list">
+    
+      <li>
+        
+        <span class="post-meta">Jul 28, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/07/28/java-12pm-bug/">12PM bug in Java</a>
+        </h2>
+        <div class="entry-content">
+          <p>I’ve recently hit on a nasty bug in Java. It sits in <code class="highlighter-rouge">Date</code> class and shows up only at noon!
+I’m going to demonstrate it using Groovy shell, but you can reproduce it in plain Java environment too.</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">format</span> <span class="o">=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="na">text</span><span class="o">.</span><span class="na">SimpleDateFormat</span><span class="o">(</span><span class="s1">'EEE MMM d hh:mm:ss z yyyy'</span><span class="o">)</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= java.text.SimpleDateFormat@fbb27a1c</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">originalDate</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 13:14:15 EDT 2013'</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date</span> <span class="o">=</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">originalDate</span><span class="o">)</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">parsedDate</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">assert</span> <span class="n">originalDate</span> <span class="o">==</span> <span class="n">parsedDate</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= null</span></div></div></pre></div></figure>
+
+<p>So far so good.</p>
+
+<p>I chose a specific formatter on line 1 to make the bug even more evident. With this formatter lines 5, 8, and 11 must be identical on my machine, and they are in this example. The assertion on line 13 also proves the equality.</p>
+
+<p>Now let’s change the example date to one hour earlier</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">originalDate</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 12:14:15 EDT 2013'</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 12:14:15 EDT 2013</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date</span> <span class="o">=</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">originalDate</span><span class="o">)</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 00:14:15 EDT 2013</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">parsedDate</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 00:14:15 EDT 2013</span></div></div></pre></div></figure>
+
+<p>Lines 2, 5, and 8 are not identical any more. The String representation of the date is 12 hours off.</p>
+
+<p>To make sure the problem is in <code class="highlighter-rouge">toString</code> and not in <code class="highlighter-rouge">parse</code>, let’s format the date using formatter</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">format</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">date</span><span class="o">)</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 12:14:15 EDT 2013</span></div></div></pre></div></figure>
+
+<p>Looks good. The problem is in <code class="highlighter-rouge">toString</code> indeed. Or is it?</p>
+
+<p>Let’s parse 13 o’clock date and 12 o’clock date. The difference between them should be 1 hour. In reality</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date13</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 13:14:15 EDT 2013'</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 13:14:15 EDT 2013</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">date12</span> <span class="o">=</span> <span class="s1">'Sun Jul 28 12:14:15 EDT 2013'</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= Sun Jul 28 12:14:15 EDT 2013</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">(</span><span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">date13</span><span class="o">).</span><span class="na">time</span> <span class="o">-</span> <span class="n">format</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">date12</span><span class="o">).</span><span class="na">time</span><span class="o">)</span> <span class="o">/</span> <span class="o">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="o">)</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c1">//= 13</span></div></div></pre></div></figure>
+
+<p>Wow, the problem is actually in <code class="highlighter-rouge">parse</code>. Then how come the <code class="highlighter-rouge">format</code> returned the correct value? That’s still a mystery to me.</p>
+
+<p>I’m actually quite surprised that this bug survived through JDK 1.7.0_09, and neither Sun nor Oracle hasn’t fixed it yet.</p>
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">Jul 8, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/07/08/lambdajam-2013/">Lambda Jam 2013</a>
+        </h2>
+        <div class="entry-content">
+          <p>This is my impressionistic non-canonical irregular Clojuresque-Erlangish notes on <a href="http://lambdajam.com">Lambda Jam</a> conference which took place in Chicago on July 8–10, 2013.
+These notes are pretty long, and I don’t split them on purpose.
+If you read them all, you should become overwhelmed and overloaded with the information.
+Only this way you can feel the same I felt on the last day of the conference :)</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2013/07/08/lambdajam-2013/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">Jun 11, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/06/11/sleeping-barber-in-erlang/">Sleeping Barber in Erlang</a>
+        </h2>
+        <div class="entry-content">
+          <p>After working on <a href="http://en.wikipedia.org/wiki/Sleeping_barber_problem"><em>Sleeping Barber</em></a> problem at <a href="http://www.meetup.com/Toronto-Coding-Dojo/events/120577762/">Coding Dojo</a> I decided to implement it in Erlang. Because Erlang is the perfect language for these sorts of problems, many people have alredy solved it in many different ways. I found at least three groups of solutions: 1) direct implementation using message passing between processes, 2) OTP solution using <em>gen_server</em>, and 3) something resembling object-oriented approach.</p>
+
+<p>Strangely enough, I didn’t see any solution based on <a href="https://en.wikipedia.org/wiki/Finite-state_machine">FSM</a>. That is odd because this is the first thing coming to my mind when I hear this problem. To fill the gap, I’m going to solve it using <em>gen_fsm</em>, which is a standard OTP behaviour for FSM.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2013/06/11/sleeping-barber-in-erlang/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">May 26, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/05/26/entrepreneur/">To be or not to be… entrepreneur</a>
+        </h2>
+        <div class="entry-content">
+          <p><a href="http://www.infoq.com/interviews/rod-johnson-entrepreneurialism">Rod Johnson</a>, creator of Spring, programmer that became entrepreneur:</p>
+
+<blockquote>
+  <p>One thing I think that you really need to be careful of as well, particularly if you, like me, are a programmer, is don’t get carried away writing code. Typically in my experience anyone who is a good programmer is pretty passionate about it, love writing code, get addicted to the process of writing code, fell pretty good about their code basis. As soon as you get down that path you are not thinking straight anymore and now you are increasing your emotional investment, you are having lots of fun writing interesting code and you are no longer in a place mentally where you are going to be trying to find some reason that you shouldn’t write that code. That has been a big lesson for me that the quicker I get to coding, the longer it takes me to ask the kind of questions I should ask upfront.</p>
+</blockquote>
+
+<p><a href="http://www.youtube.com/watch?v=MShbP3OpASA">Linus Torvalds</a>, creator of Linux, programmer that still programs:</p>
+
+<blockquote>
+  <p>I’m interested in programming. When business started happening, I didn’t get into this for the business side. I wanted to do programming. When other people started selling Linux, I said “Yes! Now I can avoid caring about that side too.”</p>
+</blockquote>
+
+<blockquote>
+  <p>I never had to deal with single business related thing in Linux ever. Seriously, I had to deal with lot of other things but business related things… I got queries and I just said “I don’t care.”</p>
+</blockquote>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">May 21, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/05/21/joe-armstrong-mostlyerlang/">Joe Armstrong at MostlyErlang</a>
+        </h2>
+        <div class="entry-content">
+          <p>The main guest at today’s <a href="http://mostlyerlang.wordpress.com/2013/05/21/43/">MostlyErlang</a> podcast is Joe Armstrong, the co-inventor of Erlang, a wise man, and a brilliant speaker. I listened to the podcast few times, and every time enjoyed it. I highly recommend it to all programmers regardless whether they are using Erlang or not.</p>
+
+<p>While we are waiting for the oficial transcript, this post provides some highlights. I put here the quotes I found particularly interesting or funny.</p>
+
+<h2 id="concurrency">Concurrency</h2>
+
+<blockquote>
+  <p>I’ve got a blog on my GitHub, and I thouhgt I’d put two different types of articles there and see what the response is. One theme I’m pursuing is “explaining to 5-year-old” theme, and the other is “technically complicated” theme.</p>
+</blockquote>
+
+<p>Then he describes the “<a href="http://joearms.github.io/2013/04/05/concurrent-and-parallel-programming.html">concurrency vs parallelism</a>” picture for 5 y.o.</p>
+
+<blockquote>
+  <p>That blog entry got 25,000 people read it, and they got 10 responses and quite a lot of criticism actually from people who know what concurrency and parallelism is. And then I compare it to some other articles I’ve written that technically deeper. There you got only few hundred people read it.</p>
+</blockquote>
+
+<p>I noticed it too. All those people, who responded with <a href="http://www.yosefk.com/blog/parallelism-and-concurrency-need-different-tools.html">long blogs</a> about concurrency, missed the point: This picture was for kids, and for kids it’s a pretty good picture. Adults should go and read the technical papers, but they didn’t.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2013/05/21/joe-armstrong-mostlyerlang/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="pager">
+      
+      <div class="previous">
+          <a href="/page/4/index.html">&larr; Older Posts</a>
+      </div>
+      
+      <span class="archive">
+          <a href="/archive/">Archive</a>
+      </span>
+      
+      <div class="next">
+          <a href="/page/2/index.html">Newer Posts &rarr;</a>
+      </div>
+      
+  </div>
+  
+  
+</div>
+
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>
