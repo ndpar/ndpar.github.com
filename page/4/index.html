@@ -125,6 +125,41 @@
     
       <li>
         
+        <span class="post-meta">May 21, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/05/21/joe-armstrong-mostlyerlang/">Joe Armstrong at MostlyErlang</a>
+        </h2>
+        <div class="entry-content">
+          <p>The main guest at today’s <a href="http://mostlyerlang.wordpress.com/2013/05/21/43/">MostlyErlang</a> podcast is Joe Armstrong, the co-inventor of Erlang, a wise man, and a brilliant speaker. I listened to the podcast few times, and every time enjoyed it. I highly recommend it to all programmers regardless whether they are using Erlang or not.</p>
+
+<p>While we are waiting for the oficial transcript, this post provides some highlights. I put here the quotes I found particularly interesting or funny.</p>
+
+<h2 id="concurrency">Concurrency</h2>
+
+<blockquote>
+  <p>I’ve got a blog on my GitHub, and I thouhgt I’d put two different types of articles there and see what the response is. One theme I’m pursuing is “explaining to 5-year-old” theme, and the other is “technically complicated” theme.</p>
+</blockquote>
+
+<p>Then he describes the “<a href="http://joearms.github.io/2013/04/05/concurrent-and-parallel-programming.html">concurrency vs parallelism</a>” picture for 5 y.o.</p>
+
+<blockquote>
+  <p>That blog entry got 25,000 people read it, and they got 10 responses and quite a lot of criticism actually from people who know what concurrency and parallelism is. And then I compare it to some other articles I’ve written that technically deeper. There you got only few hundred people read it.</p>
+</blockquote>
+
+<p>I noticed it too. All those people, who responded with <a href="http://www.yosefk.com/blog/parallelism-and-concurrency-need-different-tools.html">long blogs</a> about concurrency, missed the point: This picture was for kids, and for kids it’s a pretty good picture. Adults should go and read the technical papers, but they didn’t.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2013/05/21/joe-armstrong-mostlyerlang/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">May 9, 2013</span>
 
         <h2>
@@ -257,76 +292,6 @@ $ ps -ef | grep java
         <footer>
           <a rel="full-article" href="/2012/12/15/rabbitmq-activemq-zeromq-hornetq/">Read on →</a>
         </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Dec 9, 2012</span>
-
-        <h2>
-          <a class="post-link" href="/2012/12/09/code-retreat-2012/">Code Retreat 2012</a>
-        </h2>
-        <div class="entry-content">
-          <p>Yesterday was the Global Day of CodeRetreat. Software engineers around the globe met together to learn from each other.</p>
-
-<p><img class="center" src="https://pbs.twimg.com/media/A9mptOCCAAE0d7z.jpg" alt="CR2012 1" /></p>
-
-<p>There were several sessions where people were pair-programming <a href="http://en.wikipedia.org/wiki/Conway's_Game_of_Life">Conway’s Game of Life</a>.</p>
-
-<p><img class="center" src="https://pbs.twimg.com/media/A9nZYcTCQAEVtkP.jpg" alt="CR2012 2" /></p>
-
-<p>Each session you had to choose a new partner, so that both of you can learn something new.</p>
-
-<p><img class="center" src="https://pbs.twimg.com/media/A9n_aHzCcAARnkJ.jpg" alt="CR2012 3" /></p>
-
-<p>During the first session my partner and I decided to implement the Game in Java, mainly because it was the language she was most comfortable with. We implemented the procedural solution using two-dimensional array and nested loops. At that moment that was the only solution I could think of. The main challenge was to cover all edge cases and fix all <code class="highlighter-rouge">ArrayIndexOutOfBoundsException</code>s. Java is fairly verbose language, and with nested loops and if-else statements the final solution was pretty hard to read. You can see <a href="http://rosettacode.org/wiki/Conway's_Game_of_Life#Java">here</a> how it might look like.</p>
-
-<p>First session was a warmup, during which most people realized that programming arrays is a tedious work. For the second session my new partner suggested an object-oriented approach, where you would operate on Cell objects that would encapsulate coordinates on the grid. In this case you move the game logic from the grid to the cell, making it easier to calculate a new state. This was my first acquaintance with C#. Interesting language — basically, Java with lambdas. Here is an <a href="http://rosettacode.org/wiki/Conway's_Game_of_Life#C.23">example</a> of C# implementation. Our solution was very similar.</p>
-
-<p>While the first session’s data structure was array of booleans, on the second session it was replaced by a list of objects. The next step would be to relax the data structure even further. We decided to experiment with un-ordered set of coordinate pairs. For language we chose Clojure. Although we didn’t finish the implementation, by the end of the session we had a clear picture how to solve the problem in functional style.</p>
-
-<p>On the fourth session the facilitators put an interesting constraint: the coding must be done in absolute silence. That was the most amazing experience of the day. Before we started I thought we couldn’t accomplish much without talking. As it turned out, we could. The key of effective silent coding is to use the tools which both partners are familiar with. In our case we both were advanced users of Vim, and we knew Lisp languages. Our Clojure implementation was based on map/filter/reduce approach and spanned 20 lines of code. After the session <a href="http://langnostic.blogspot.com">Leo</a> showed me Christophe Grand’s <a href="http://clj-me.cgrand.net/2011/08/19/conways-game-of-life/">7-line solution</a> based on list comprehensions. It is so wonderful that I want to post it here</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">life.clj</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">(defn neighbours [[x y]]
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">  (for [dx [-1 0 1] dy (if (zero? dx) [-1 1] [-1 0 1])]
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    [(+ dx x) (+ dy y)]))
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">(defn step [cells]
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">  (set (for [[loc n] (frequencies (mapcat neighbours cells))
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">             :when (or (= n 3) (and (= n 2) (cells loc)))]
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">         loc)))</div></div></pre></div></figure>
-
-<p>For the last session we chose Erlang. Because we already knew how to implement the functional solution, that was just an exercise of translating Clojure code into Erlang. Unfortunately we didn’t find an equivalent of <code class="highlighter-rouge">frequencies</code> function in the standard library, so we implemented it ourselves. Other than that, the Erlang code is almost identical to Clojure.</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">life.erl</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">neighbours</span><span class="p">(&#x7b;</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">&#x7d;)</span> <span class="o">-&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">[&#x7b;</span><span class="nv">X</span> <span class="o">+</span> <span class="nv">DX</span><span class="p">,</span> <span class="nv">Y</span> <span class="o">+</span> <span class="nv">DY</span><span class="p">&#x7d;</span> <span class="p">||</span> <span class="nv">DX</span> <span class="o">&lt;-</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="nv">DY</span> <span class="o">&lt;-</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">&#x7b;</span><span class="nv">DX</span><span class="p">,</span> <span class="nv">DY</span><span class="p">&#x7d;</span> <span class="o">=/=</span> <span class="p">&#x7b;</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">&#x7d;].</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">step</span><span class="p">(</span><span class="nv">Cells</span><span class="p">)</span> <span class="o">-&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">Nbs</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="nf">flatmap</span><span class="p">(</span><span class="k">fun</span> <span class="n">neighbours</span><span class="o">/</span><span class="mi">1</span><span class="p">,</span> <span class="nn">sets</span><span class="p">:</span><span class="nf">to_list</span><span class="p">(</span><span class="nv">Cells</span><span class="p">)),</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">NewCells</span> <span class="o">=</span> <span class="p">[</span><span class="nv">C</span> <span class="p">||</span> <span class="p">&#x7b;</span><span class="nv">C</span><span class="p">,</span> <span class="nv">N</span><span class="p">&#x7d;</span> <span class="o">&lt;-</span> <span class="nn">dict</span><span class="p">:</span><span class="nf">to_list</span><span class="p">(</span><span class="nf">frequencies</span><span class="p">(</span><span class="nv">Nbs</span><span class="p">)),</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">                     <span class="p">(</span><span class="nv">N</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">orelse</span> <span class="p">((</span><span class="nv">N</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">andalso</span> <span class="nn">sets</span><span class="p">:</span><span class="nf">is_element</span><span class="p">(</span><span class="nv">C</span><span class="p">,</span> <span class="nv">Cells</span><span class="p">))],</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nn">sets</span><span class="p">:</span><span class="nf">from_list</span><span class="p">(</span><span class="nv">NewCells</span><span class="p">).</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">frequencies</span><span class="p">(</span><span class="nv">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nf">frequencies</span><span class="p">(</span><span class="nv">List</span><span class="p">,</span> <span class="nn">dict</span><span class="p">:</span><span class="nf">new</span><span class="p">()).</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">frequencies</span><span class="p">([],</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">Acc</span><span class="p">;</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nf">frequencies</span><span class="p">([</span><span class="nv">X</span><span class="p">|</span><span class="nv">Xs</span><span class="p">],</span> <span class="nv">Acc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nf">frequencies</span><span class="p">(</span><span class="nv">Xs</span><span class="p">,</span> <span class="nn">dict</span><span class="p">:</span><span class="nf">update_counter</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">Acc</span><span class="p">)).</span></div></div></pre></div></figure>
-
-<h2 id="summary">Summary</h2>
-
-<p>During this day I learnt a lot: new language, new abstractions, new techniques, new ways of communication, new ideas. I met bunch of smart people. I was so overwhelmed with all this cool stuff that I had to write this blog post to offload it from my head.</p>
-
-<p>If you are a programmer and you’ve never been to CodeRetreat, I strongly encourage you to do it next year. It’s an exciting experience.</p>
-
-<p>I want to thank all the people who organized and participated in this event.</p>
-
-<h3 id="photo-credits">Photo Credits</h3>
-
-<ul>
-  <li>Michael DiBernardo <a href="https://twitter.com/mdibernardo/status/277439446381625345/photo/1">[1]</a></li>
-  <li>Kunal Gupta <a href="https://twitter.com/kunalfrompolar/status/277491865991921664/photo/1">[2]</a></li>
-  <li>Carlo Barrettara <a href="https://twitter.com/barrettara/status/277533676273823746/photo/1">[3]</a></li>
-</ul>
-
-
-        </div>
         
       </li>
     

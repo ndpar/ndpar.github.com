@@ -154,6 +154,35 @@ ISBN: 978-0470474242</p>
     
       <li>
         
+        <span class="post-meta">Apr 11, 2017</span>
+
+        <h2>
+          <a class="post-link" href="/2017/04/11/rsa-private-key/">RSA Private Key</a>
+        </h2>
+        <div class="entry-content">
+          <blockquote>
+  <p>“What I cannot create, I do not understand” — Richard Feynman</p>
+</blockquote>
+
+<p>As a fun exercise I wanted to know how to build an RSA private key file from scratch. It turned out that it was not complicated. In fact it was very educational to learn about the PKCS #1 and X.609 standards. By the end of this post you should be able to read DER files without the <code class="highlighter-rouge">openssl</code> command, too.</p>
+
+<p>From a mathematical perspective an <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Key_generation">RSA</a> private key is just a pair of numbers satisfying a few conditions. The first step is to choose two prime numbers. If we want our key to be $k$-bit long then each prime should be $k/2$-bit long. Here are two primes 1024-bit long:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p = 188658351657909995564241240465674883756750911978965594406091265432265641964092435440867010496656290185915042088848864982944624560228571535282140345941898374783486396513112284924130530433476612244870421527834092351771495657957917171265855063528745445693207773620468819387929613829761428627329588653924255089451
+q = 314178598271171309643469864042809599136290738797354680579453738873053976803051841787567944451717551290169456210178094252448060684978774667964812128639960504040754248179131205124174037497556941333232996617690501240860884613659741212508891734662698093999296965839284246675187499601986034176733136066305345935229
+</code></pre></div></div>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2017/04/11/rsa-private-key/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Dec 24, 2016</span>
 
         <h2>
@@ -235,27 +264,6 @@ using one of the methods below.</p>
         
         <footer>
           <a rel="full-article" href="/2016/10/28/ml-linear-regression/">Read on →</a>
-        </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Apr 3, 2015</span>
-
-        <h2>
-          <a class="post-link" href="/2015/04/03/feynman-tot/">Another Notation as a Tool of Thought</a>
-        </h2>
-        <div class="entry-content">
-          <p>In his seminal <a href="http://www.jsoftware.com/papers/tot.htm">paper</a> Kenneth Iverson described a new mathematical notation which soon became A Programming Language.</p>
-
-<p>Recently, while reading <em>Surely You’re Joking, Mr. Feynman!</em>, I found that Feynman invented his own notation when he was in school.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2015/04/03/feynman-tot/">Read on →</a>
         </footer>
         
       </li>

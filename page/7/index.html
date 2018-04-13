@@ -125,6 +125,23 @@
     
       <li>
         
+        <span class="post-meta">Jun 7, 2011</span>
+
+        <h2>
+          <a class="post-link" href="/2011/06/07/nothing-new-under-sun/">Nothing new under the Sun</a>
+        </h2>
+        <div class="entry-content">
+          <p>Every generation of software developers needs its own fad. For my generation it was Agile, for generation before it was OOP, and before that it was another big thing. Gerald Weinberg, one of the most influential people in our industry, blogged yesterday about this issue. With over 50 years of experience in software development he knows what he is talking about. Read his <a href="http://secretsofconsulting.blogspot.com/2011/06/beyond-agile-programming.html">blog post</a> — he has a very good point.</p>
+
+<p>P.S. I’m wondering what will be the next big thing. Will it be Cloud or <a href="/2013/01/15/embrace-big-data/">Big Data</a>?</p>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Jun 5, 2011</span>
 
         <h2>
@@ -500,47 +517,6 @@ B/B
 360  src/rabbit_msg_store.erl
 356  src/rabbit_exchange.erl
 </code></pre></div></div>
-
-
-        </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jan 24, 2011</span>
-
-        <h2>
-          <a class="post-link" href="/2011/01/24/git-maven/">Maven and Git</a>
-        </h2>
-        <div class="entry-content">
-          <p>More and more Maven projects are switching from Subversion to Git, and the majority of those projects make the same mistake: They configure <em>scm</em> section of POM to point to remote repository, the same way they did it in Subversion</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;scm&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;url&gt;</span>http://github.com/SpringSource/spring-batch<span class="nt">&lt;/url&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;connection&gt;</span>scm:git:git://github.com/SpringSource/spring-batch.git<span class="nt">&lt;/connection&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;developerConnection&gt;</span>scm:git:ssh://git@github.com/SpringSource/spring-batch.git<span class="nt">&lt;/developerConnection&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/scm&gt;</span></div></div></pre></div></figure>
-
-<p>By doing this they lose the main benefit of Git. They become dependent on the remote machine. And when their release depends on the remote machine, that’s what happens: They need to release the project but the remote machine is down</p>
-
-<p><img class="center" src="/images/posts/github-down.jpg" /></p>
-
-<p>The right way of configuring Git in Maven is following</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;scm&gt;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;url&gt;</span>scm:git:file://.<span class="nt">&lt;/url&gt;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;connection&gt;</span>scm:git:file://.<span class="nt">&lt;/connection&gt;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;developerConnection&gt;</span>scm:git:file://.<span class="nt">&lt;/developerConnection&gt;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/scm&gt;</span></div></div></pre></div></figure>
-
-<p>This configuration is universal, and it separates two orthogonal concerns: releases and remote copies.</p>
-
-<h3 id="resources">Resources</h3>
-
-<ul>
-  <li><a href="http://ascii.io/a/3459">Screencast</a> that shows how to work with Git in Maven projects.</li>
-</ul>
 
 
         </div>

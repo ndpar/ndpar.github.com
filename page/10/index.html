@@ -125,6 +125,73 @@
     
       <li>
         
+        <span class="post-meta">Sep 25, 2009</span>
+
+        <h2>
+          <a class="post-link" href="/2009/09/25/groovy-regular-expressions/">Groovy regular expressions</a>
+        </h2>
+        <div class="entry-content">
+          <p>Because of the compact syntax regular expressions in Groovy are more readable than in Java. Here is how Jeffrey Friedl’s [example][1] looks in Groovy:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">subDomain</span>  <span class="o">=</span> <span class="s1">'(?i:[a-z0-9]|[a-z0-9][-a-z0-9]*[a-z0-9])'</span> <span class="c1">// simple regex in single quotes</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">topDomains</span> <span class="o">=</span> <span class="s">$/
+&lt;/div&gt;&lt;/div&gt;<div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    (?x-i : com         \b     # you can put whitespaces and comments
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">          | edu         \b     # inside regex in eXtended mode
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">          | biz         \b
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">          | in(?:t|fo)  \b     # backslash is not escaped
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">          | mil         \b     # in dollar-slash strings
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">          | net         \b
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">          | org         \b
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">          | [a-z][a-z]  \b
+</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    )/$&lt;/span&gt;
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">hostname</span> <span class="o">=</span> <span class="s">/(?:$&#x7b;subDomain&#x7d;\.)+$&#x7b;topDomains&#x7d;/</span>  <span class="c1">// variable substitution in slashy string</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">NOT_IN</span>   <span class="o">=</span> <span class="s">/;\"'&lt;&gt;()\[\]&#x7b;&#x7d;\s\x7F-\xFF/</span>     <span class="c1">// backslash is not escaped in slashy strings</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">NOT_END</span>  <span class="o">=</span> <span class="s">/!.,?/</span>
+</div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">ANYWHERE</span> <span class="o">=</span> <span class="s">/[^$&#x7b;NOT_IN&#x7d;$&#x7b;NOT_END&#x7d;]/</span>
+</div></div><div data-line="18" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">EMBEDDED</span> <span class="o">=</span> <span class="s">/[$NOT_END]/</span>                        <span class="c1">// you can ommit &#x7b;&#x7d; around var name</span>
+</div></div><div data-line="19" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="20" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">urlPath</span>  <span class="o">=</span> <span class="s2">"/$ANYWHERE*($EMBEDDED+$ANYWHERE+)*"</span>
+</div></div><div data-line="21" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="22" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">url</span> <span class="o">=</span>
+</div></div><div data-line="23" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s2">"""(?x:
+&lt;/div&gt;&lt;/div&gt;<div data-line="24" class="code-highlight-row numbered"><div class="code-highlight-line">             # you have to escape backslash in multi-line double quotes
+</div></div><div data-line="25" class="code-highlight-row numbered"><div class="code-highlight-line">             \\b
+</div></div><div data-line="26" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="27" class="code-highlight-row numbered"><div class="code-highlight-line">             # match the hostname part
+</div></div><div data-line="28" class="code-highlight-row numbered"><div class="code-highlight-line">             (
+</div></div><div data-line="29" class="code-highlight-row numbered"><div class="code-highlight-line">               (?: ftp | http s? ): // [-\\w]+(\\.\\w[-\\w]*)+
+</div></div><div data-line="30" class="code-highlight-row numbered"><div class="code-highlight-line">             |
+</div></div><div data-line="31" class="code-highlight-row numbered"><div class="code-highlight-line">               $hostname
+</div></div><div data-line="32" class="code-highlight-row numbered"><div class="code-highlight-line">             )
+</div></div><div data-line="33" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="34" class="code-highlight-row numbered"><div class="code-highlight-line">             # allow optional port
+</div></div><div data-line="35" class="code-highlight-row numbered"><div class="code-highlight-line">             (?: :\\d+ )?
+</div></div><div data-line="36" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="37" class="code-highlight-row numbered"><div class="code-highlight-line">             # rest of url is optional, and begins with /
+</div></div><div data-line="38" class="code-highlight-row numbered"><div class="code-highlight-line">             (?: $urlPath )?
+</div></div><div data-line="39" class="code-highlight-row numbered"><div class="code-highlight-line">       )"""&lt;/span&gt;
+</div></div><div data-line="40" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="41" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">assert</span> <span class="s1">'http://www.google.com/search?rls=en&amp;q=regex&amp;ie=UTF-8&amp;oe=UTF-8'</span> <span class="o">==~</span> <span class="n">url</span>
+</div></div><div data-line="42" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">assert</span> <span class="s1">'pages.github.io'</span> <span class="o">==~</span> <span class="n">url</span></div></div>&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+As you can see, there are several notations, and for every subexpression you can choose the one that is most expressive.
+
+### Resources
+
+- Martin Fowler on [composed regexes][2]
+- [Introducing dollar-slash][3] notation into Groovy
+- [Mastering Regular Expressions][4] — the best regex book
+- Groovy [Pattern][5] and [Matcher][6] classes
+
+
+[1]: http://regex.info/listing.cgi?ed=3&amp;p=208
+[2]: http://martinfowler.com/bliki/ComposedRegex.html
+[3]: http://jira.codehaus.org/browse/GROOVY-2701
+[4]: http://regex.info/
+[5]: http://mrhaki.blogspot.com/2009/09/groovy-goodness-using-regular.html
+[6]: http://mrhaki.blogspot.com/2009/09/groovy-goodness-matchers-for-regular.html
+</span></div></div></span></div></div></pre></div></figure>
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Apr 13, 2009</span>
 
         <h2>

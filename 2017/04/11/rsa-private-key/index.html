@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RSA Private Key - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">RSA Private Key</h1>
+    <p class="post-meta">
+      <time datetime="2017-04-11T06:32:13-04:00" itemprop="datePublished">
+        
+        Apr 11, 2017
+      </time>
+      
+      
+        • <span>Categories: Cryptography</span>
+      
+      
+        • <span>Tags: cryptography, erlang, shell</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <blockquote>
+  <p>“What I cannot create, I do not understand” — Richard Feynman</p>
+</blockquote>
+
+<p>As a fun exercise I wanted to know how to build an RSA private key file from scratch. It turned out that it was not complicated. In fact it was very educational to learn about the PKCS #1 and X.609 standards. By the end of this post you should be able to read DER files without the <code class="highlighter-rouge">openssl</code> command, too.</p>
+
+<p>From a mathematical perspective an <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Key_generation">RSA</a> private key is just a pair of numbers satisfying a few conditions. The first step is to choose two prime numbers. If we want our key to be $k$-bit long then each prime should be $k/2$-bit long. Here are two primes 1024-bit long:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p = 188658351657909995564241240465674883756750911978965594406091265432265641964092435440867010496656290185915042088848864982944624560228571535282140345941898374783486396513112284924130530433476612244870421527834092351771495657957917171265855063528745445693207773620468819387929613829761428627329588653924255089451
+q = 314178598271171309643469864042809599136290738797354680579453738873053976803051841787567944451717551290169456210178094252448060684978774667964812128639960504040754248179131205124174037497556941333232996617690501240860884613659741212508891734662698093999296965839284246675187499601986034176733136066305345935229
+</code></pre></div></div>
+
+<!-- more -->
+
+<p>The product of these primes is a <em>modulus</em> of an RSA key:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n = 59272416476031870310813269456482000649521214839097555249658956878429667033345971911228897520094455477409965068308635488009811551774829628449872899499797577442984988498839316022812024085070921696680719869349925179295023663107587202715785410835479198432493682921268850396489979925015801144167399352584659489661536583643002656464738703092254954684055792766769402010692858706224804514602103071851330570529764510187019367372650739782606640058374679178234229890697709969669187824580807498629684496386911304548122885254757980404399786500026446625957982264789094145961033518145284058963944371890973871992953130981578647169279
+</code></pre></div></div>
+
+<p>To form a public key, we need to select a public exponent. A common choice is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e = 65537
+</code></pre></div></div>
+
+<p>To find the private exponent we need to calculate $t = LCM(p - 1, q - 1)$ and make sure that $t$ and $e$ are relatively prime. In our case</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>t = 9878736079338645051802211576080333441586869139849592541609826146404944505557661985204816253349075912901660844718105914668301925295804938074978816583299596240497498083139886003802004014178486949446786644891654196549170610517931200452630901805913199738748947153544808399414996654169300190694566558764109914943505624448845595859921831997957745033527125185998846955951218950319914149305826465770482602596898444785155811512270630091202325802194555495831212902685975181807491196648094001430229988075979625161669911184872231135294567704734798040363872577766275101044754796447588498816804543076537734864815067710224841024100
+</code></pre></div></div>
+
+<p>and it is indeed relatively prime with 65537. If it wasn’t we would try another public exponent or different primes.</p>
+
+<p>The private exponent $d$ is a solution of the equation $d e = 1 (\mod t)$:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d = 5713468916051268780132002190819673753298269494741275244475317000371286701232244684486677071989004278539215293013032128257126755518442870024474679399017164287346341262848989717077546426498334823562735569036929683476505833667571970367220374781441535665311810014311952295213788137687613934542118968573398572043557642081710231861001832858546933301048448251370985779305964616826007078677511121329392138316261633140615925043274882325662342756097813929749397956320997349454981862425032501185764338740435657905121325564969361566019276046817336541525431835263330506889244027107578840336789285453607676614980092565853828740673
+</code></pre></div></div>
+
+<p>For cryptographic purposes numbers $n$, $e$, and $d$ is all you need. But for computational efficiency, <a href="https://tools.ietf.org/html/rfc3447#appendix-A.1.2">PKCS #1</a> requires three more numbers:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dp = 73281896610394353679278716733062018642836992328738378882095081314512206043607445092362352353836446271004764124934396689973927818327643095864587130729861100246627297496594281662474493999496683063272141245923256923555349878154854470435248368894689607565375136076663178588561029330976954828050251588613298774923
+dq = 48768464839901517204068219889642523338167534153005007332267007729306774890786065680530520147509386289804139311017314689872196184571907086030883833325515635558640050150698105646096441452349768286357008630113759694878889469685224336708316761779203010669619421601279256624909325014129482974196350049628824697485
+qi = 96649294882937985304687069867459392294125861105683721163844518450032271220340037497914128685821080429968806273738795285224909792718537306451785722671106543229818520952472427298015487036380943796651715614555934218685011386800675679145785323478975345929484318504374494139364842881030508783682984009085234707403
+</code></pre></div></div>
+
+<p>That’s all the numbers we need. You can calculate these numbers using any mathematical software that supports arbitrarily long integers. I did it in <a href="https://github.com/ndpar/erlang/tree/master/src">Erlang</a></p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Erlang</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">P</span> <span class="o">=</span> <span class="nn">primes</span><span class="p">:</span><span class="nf">random_prime</span><span class="p">(</span><span class="nn">maths</span><span class="p">:</span><span class="nf">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1025</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">Q</span> <span class="o">=</span> <span class="nn">primes</span><span class="p">:</span><span class="nf">random_prime</span><span class="p">(</span><span class="nn">maths</span><span class="p">:</span><span class="nf">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1025</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">N</span> <span class="o">=</span> <span class="nv">P</span> <span class="o">*</span> <span class="nv">Q</span><span class="p">.</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">T</span> <span class="o">=</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">lcm</span><span class="p">(</span><span class="nv">P</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">Q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">E</span> <span class="o">=</span> <span class="mi">65537</span><span class="p">.</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="mi">1</span> <span class="o">=</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">gcd</span><span class="p">(</span><span class="nv">E</span><span class="p">,</span> <span class="nv">T</span><span class="p">).</span>       <span class="c">% make sure e and t are co-primes</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">D</span> <span class="o">=</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">mod_inv</span><span class="p">(</span><span class="nv">E</span><span class="p">,</span> <span class="nv">T</span><span class="p">).</span>
+</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">DP</span> <span class="o">=</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">mod</span><span class="p">(</span><span class="nv">D</span><span class="p">,</span> <span class="nv">P</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">DQ</span> <span class="o">=</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">mod</span><span class="p">(</span><span class="nv">D</span><span class="p">,</span> <span class="nv">Q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">).</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nv">QI</span> <span class="o">=</span> <span class="nn">maths</span><span class="p">:</span><span class="nf">mod_inv</span><span class="p">(</span><span class="nv">Q</span><span class="p">,</span> <span class="nv">P</span><span class="p">).</span></div></div></pre></div></figure>
+
+<p>The next step is to convert the numbers to hexadecimal strings. Here is an Erlang one-liner for that</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">Erlang</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">[</span><span class="nb">integer_to_list</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="p">||</span> <span class="nv">X</span> <span class="o">&lt;-</span> <span class="p">[</span><span class="nv">N</span><span class="p">,</span> <span class="nv">E</span><span class="p">,</span> <span class="nv">D</span><span class="p">,</span> <span class="nv">P</span><span class="p">,</span> <span class="nv">Q</span><span class="p">,</span> <span class="nv">DP</span><span class="p">,</span> <span class="nv">DQ</span><span class="p">,</span> <span class="nv">QI</span><span class="p">]].</span></div></div></pre></div></figure>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> n = 01D58729C5FFE1785360D7A2B532EAA6329C9B8BD95AF105422B40368630F636E1CB0B847D74798BD95249B42A47971BB5903FC87A97B7D541AC599961B8B0EB6CF24F7DFC798434EAE2E3D4E741D4FEC9C696208015205A50258B688A5475751B361C57CAEBE26DB3CF92AA4F4A69DD936E14A7A58072CFF461035ED9D448D1161E2C0DFFDF2A36B42CABC6B2D8FDACB7BC4C113890E69124E4FBD488AF9FBC5550C7586C5412E01A6DE9F2A8966E7C183C5A4CADD93E85FE6B1286211DEE62F29274358F569E20F169F1A2D01259710503AC6AD1DA8FC2C6C4C6933C78D1AE37DE30A0A84676FD11D95D43B5B93C032F52CEC2B1E636FC94E9FEA2F321A668FF
+ e = 010001
+ d = 2D426781C68B4810AC227274B50119742CD471994A1836EC37446BFD1375D30F2B860E0769D582E837F3BD8235D46DBF5AB5A09AF09FAFD6DCC8E642C7E2DB4EC282172037367498BA60EBD7943E4BDBCCB611514762B9A74577380F32DA54FCD7D7C8E9594397AA358AC0655444502F889F9A696C5AFA3611AE997E0B3B2F0185C60257E90D1955546F0190DF57F1674F0AD912BD8FFEAEAE65A79E0D9783E980E3C5CCC1B18D524296B806BDA4EC28DF028CCDA91FD94A89228EFA1B82A6B0B4C0A142EE7C890BE97C30F58232BEC26E897E25FC61B432CC651F82622132F3BE34E764623E4DD75DD469703C0081DCCE7F58C8A3DC72D46FB2BE548E5AF641
+ p = 010CA88D97C90A5544D1CA63A5916B20CA2FC92C5CE2EB43409D953009630B322723D15581610A6CFE7686710A0086776C8929106646A4118CDC937E1B443F32D8B8255F4AB631D11C818D4D3411CF72D41780FC6354E6198BD6BE6D9790C12F6CB596B1C9BAC4F53B34C833375B60E1EC5EF71407FBA5229BDECEE38C8841432B
+ q = 01BF67B98C4202D2BF8510B0F84752C26BF6C1E3C464B6678E612904F471A2D9E3A251B39416701F19290EC9957EA1EBB08ADABD3088018E7F81A57F3E287C3387EFDDC6ABBA7CDD446F089930071EDD3D06EB0D69AA334F23C7C7E8648AFC4C3C781BEBE6428949A2841E555B754685C2AAF2BA1E6F7F1A049CABFDC7FD5F577D
+dp = 685B5CCCD5F1E69759EA84F47E5D1F9A8A1F59D526EBFDEEAE8791E6438BC8CA7D56462180815D3F26E928259B78A0110FE25C956DE13354052661B8D3B4BCDA84053853BC1BF3BF5FEF744AC2945365614FE039F17383FED6C697A965383564C3D0AA74D2D0C8F55B965C96A72F25F2FC1C7BB272247E220FD54B7C7E3CE38B
+dq = 4572D7658335A6FB1DAFAA98CF91742688262EB1E4A43FCCE51E15EBCFDBE490A638A274814B2438A69BEA04AFA478CE6DAF68A0A8EBFCEFA3F3499E1F70B01B10CBCF3406FDACE71B892D263C64B918E9030190FE5F7A9066498CB456B2B52EC9C223CB1956F03C2EDFFA85F8DD5A940E2F215EEA15C3B7258EB9151B2A7A8D
+qi = 89A217111B58DD54CCFB00C4873DB4EF6716283AEA77D2B46D85F1D8D47F2C0EC21AA37EBB26781C19EC43EB9583FB47205D83692D7CDCA9528B69C19EEFC100624A31907B33AFB9008C4685EB8AB709B890D7C6A6BD50BD41EE5A373FD31701F516FDB30C694243FBCB0851E237EA31703A2BC2A945EE5B9F12DCD574F3FBCB
+</code></pre></div></div>
+
+<p>Now we need to encode every number according to the <a href="https://www.itu.int/rec/T-REC-X.690-201508-I/en">ASN.1</a> DER. Let’s start with $n$. Under the DER, a value has three components: a type tag, a length in octets, and content. Since $n$ is an <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb540806(v=vs.85).aspx">integer</a>, its type tag is 0x02. The length of $n$ in octets is 257 = 0x0101. Since it’s greater than 127, we use the long <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb648641(v=vs.85).aspx">format</a> for the length. 0x0101 occupies 2 bytes, hence the length spec value is 2 = 0x02. To indicate that the length format is long we change its leftmost bit to 1, which gives us 0x82. The final length value is then 0x820101 and $n$’s final encoding is (with spaces added for readability)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n = 02 820101 01D58729C5FFE1785360D7A2B532EAA6329C9B8BD95AF105422B40368630F636E1CB0B847D74798BD95249B42A47971BB5903FC87A97B7D541AC599961B8B0EB6CF24F7DFC798434EAE2E3D4E741D4FEC9C696208015205A50258B688A5475751B361C57CAEBE26DB3CF92AA4F4A69DD936E14A7A58072CFF461035ED9D448D1161E2C0DFFDF2A36B42CABC6B2D8FDACB7BC4C113890E69124E4FBD488AF9FBC5550C7586C5412E01A6DE9F2A8966E7C183C5A4CADD93E85FE6B1286211DEE62F29274358F569E20F169F1A2D01259710503AC6AD1DA8FC2C6C4C6933C78D1AE37DE30A0A84676FD11D95D43B5B93C032F52CEC2B1E636FC94E9FEA2F321A668FF
+</code></pre></div></div>
+
+<p>Let’s encode $e$. Again, the tag value is 0x02. The length in octets is 3 = 0x03. Since it’s less than 128, we use the short format, without length spec. The final encoding is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>e = 02 03 010001
+</code></pre></div></div>
+
+<p>Analogously we encode $d$, $p$, $q$, $dp$, and $dq$</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> d = 02 820100 2D426781C68B4810AC227274B50119742CD471994A1836EC37446BFD1375D30F2B860E0769D582E837F3BD8235D46DBF5AB5A09AF09FAFD6DCC8E642C7E2DB4EC282172037367498BA60EBD7943E4BDBCCB611514762B9A74577380F32DA54FCD7D7C8E9594397AA358AC0655444502F889F9A696C5AFA3611AE997E0B3B2F0185C60257E90D1955546F0190DF57F1674F0AD912BD8FFEAEAE65A79E0D9783E980E3C5CCC1B18D524296B806BDA4EC28DF028CCDA91FD94A89228EFA1B82A6B0B4C0A142EE7C890BE97C30F58232BEC26E897E25FC61B432CC651F82622132F3BE34E764623E4DD75DD469703C0081DCCE7F58C8A3DC72D46FB2BE548E5AF641
+ p = 02 8181 010CA88D97C90A5544D1CA63A5916B20CA2FC92C5CE2EB43409D953009630B322723D15581610A6CFE7686710A0086776C8929106646A4118CDC937E1B443F32D8B8255F4AB631D11C818D4D3411CF72D41780FC6354E6198BD6BE6D9790C12F6CB596B1C9BAC4F53B34C833375B60E1EC5EF71407FBA5229BDECEE38C8841432B
+ q = 02 8181 01BF67B98C4202D2BF8510B0F84752C26BF6C1E3C464B6678E612904F471A2D9E3A251B39416701F19290EC9957EA1EBB08ADABD3088018E7F81A57F3E287C3387EFDDC6ABBA7CDD446F089930071EDD3D06EB0D69AA334F23C7C7E8648AFC4C3C781BEBE6428949A2841E555B754685C2AAF2BA1E6F7F1A049CABFDC7FD5F577D
+dp = 02 8180 685B5CCCD5F1E69759EA84F47E5D1F9A8A1F59D526EBFDEEAE8791E6438BC8CA7D56462180815D3F26E928259B78A0110FE25C956DE13354052661B8D3B4BCDA84053853BC1BF3BF5FEF744AC2945365614FE039F17383FED6C697A965383564C3D0AA74D2D0C8F55B965C96A72F25F2FC1C7BB272247E220FD54B7C7E3CE38B
+dq = 02 8180 4572D7658335A6FB1DAFAA98CF91742688262EB1E4A43FCCE51E15EBCFDBE490A638A274814B2438A69BEA04AFA478CE6DAF68A0A8EBFCEFA3F3499E1F70B01B10CBCF3406FDACE71B892D263C64B918E9030190FE5F7A9066498CB456B2B52EC9C223CB1956F03C2EDFFA85F8DD5A940E2F215EEA15C3B7258EB9151B2A7A8D
+</code></pre></div></div>
+
+<p>$qi$ is a bit trickier. Its leftmost bit is 1, so in ASN.1 it would be encoded as a negative integer. To keep it positive we have to prepend one byte of zeros to it. With this additional byte, the octet length becomes 129 = 0x81 and the final encoding is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qi = 02 8181 0089A217111B58DD54CCFB00C4873DB4EF6716283AEA77D2B46D85F1D8D47F2C0EC21AA37EBB26781C19EC43EB9583FB47205D83692D7CDCA9528B69C19EEFC100624A31907B33AFB9008C4685EB8AB709B890D7C6A6BD50BD41EE5A373FD31701F516FDB30C694243FBCB0851E237EA31703A2BC2A945EE5B9F12DCD574F3FBCB
+</code></pre></div></div>
+
+<p>After we encoded all RSA numbers, the only thing left from the <a href="https://tools.ietf.org/html/rfc3447#appendix-A.1.2">PKCS #1</a> perspective is to encode the RSA version and the ASN.1 sequence. For a two-prime RSA key, the version is 0 which is encoded as</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>02 01 00
+</code></pre></div></div>
+
+<p>To encode the ASN.1 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb648645%28v=vs.85%29.aspx">sequence</a>, we need to calculate the total length of all the values we encoded so far. That will be the sequence’s content. If we concatenate all the values (version and RSA numbers), the total length in octets would be 1187 = 0x04A3. That means the sequence value is encoded as</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>30 8204A3
+</code></pre></div></div>
+
+<p>We can now put everything together. Here is the hexadecimal representation of our RSA private key (with line breaks added for readability):</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">rsa-private.hex</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row unnumbered"><div class="code-highlight-line">308204A30201000282010101D58729C5FFE1785360D7A2B532EAA6329C9B8BD9
+</div></div><div data-line="2" class="code-highlight-row unnumbered"><div class="code-highlight-line">5AF105422B40368630F636E1CB0B847D74798BD95249B42A47971BB5903FC87A
+</div></div><div data-line="3" class="code-highlight-row unnumbered"><div class="code-highlight-line">97B7D541AC599961B8B0EB6CF24F7DFC798434EAE2E3D4E741D4FEC9C6962080
+</div></div><div data-line="4" class="code-highlight-row unnumbered"><div class="code-highlight-line">15205A50258B688A5475751B361C57CAEBE26DB3CF92AA4F4A69DD936E14A7A5
+</div></div><div data-line="5" class="code-highlight-row unnumbered"><div class="code-highlight-line">8072CFF461035ED9D448D1161E2C0DFFDF2A36B42CABC6B2D8FDACB7BC4C1138
+</div></div><div data-line="6" class="code-highlight-row unnumbered"><div class="code-highlight-line">90E69124E4FBD488AF9FBC5550C7586C5412E01A6DE9F2A8966E7C183C5A4CAD
+</div></div><div data-line="7" class="code-highlight-row unnumbered"><div class="code-highlight-line">D93E85FE6B1286211DEE62F29274358F569E20F169F1A2D01259710503AC6AD1
+</div></div><div data-line="8" class="code-highlight-row unnumbered"><div class="code-highlight-line">DA8FC2C6C4C6933C78D1AE37DE30A0A84676FD11D95D43B5B93C032F52CEC2B1
+</div></div><div data-line="9" class="code-highlight-row unnumbered"><div class="code-highlight-line">E636FC94E9FEA2F321A668FF0203010001028201002D426781C68B4810AC2272
+</div></div><div data-line="10" class="code-highlight-row unnumbered"><div class="code-highlight-line">74B50119742CD471994A1836EC37446BFD1375D30F2B860E0769D582E837F3BD
+</div></div><div data-line="11" class="code-highlight-row unnumbered"><div class="code-highlight-line">8235D46DBF5AB5A09AF09FAFD6DCC8E642C7E2DB4EC282172037367498BA60EB
+</div></div><div data-line="12" class="code-highlight-row unnumbered"><div class="code-highlight-line">D7943E4BDBCCB611514762B9A74577380F32DA54FCD7D7C8E9594397AA358AC0
+</div></div><div data-line="13" class="code-highlight-row unnumbered"><div class="code-highlight-line">655444502F889F9A696C5AFA3611AE997E0B3B2F0185C60257E90D1955546F01
+</div></div><div data-line="14" class="code-highlight-row unnumbered"><div class="code-highlight-line">90DF57F1674F0AD912BD8FFEAEAE65A79E0D9783E980E3C5CCC1B18D524296B8
+</div></div><div data-line="15" class="code-highlight-row unnumbered"><div class="code-highlight-line">06BDA4EC28DF028CCDA91FD94A89228EFA1B82A6B0B4C0A142EE7C890BE97C30
+</div></div><div data-line="16" class="code-highlight-row unnumbered"><div class="code-highlight-line">F58232BEC26E897E25FC61B432CC651F82622132F3BE34E764623E4DD75DD469
+</div></div><div data-line="17" class="code-highlight-row unnumbered"><div class="code-highlight-line">703C0081DCCE7F58C8A3DC72D46FB2BE548E5AF641028181010CA88D97C90A55
+</div></div><div data-line="18" class="code-highlight-row unnumbered"><div class="code-highlight-line">44D1CA63A5916B20CA2FC92C5CE2EB43409D953009630B322723D15581610A6C
+</div></div><div data-line="19" class="code-highlight-row unnumbered"><div class="code-highlight-line">FE7686710A0086776C8929106646A4118CDC937E1B443F32D8B8255F4AB631D1
+</div></div><div data-line="20" class="code-highlight-row unnumbered"><div class="code-highlight-line">1C818D4D3411CF72D41780FC6354E6198BD6BE6D9790C12F6CB596B1C9BAC4F5
+</div></div><div data-line="21" class="code-highlight-row unnumbered"><div class="code-highlight-line">3B34C833375B60E1EC5EF71407FBA5229BDECEE38C8841432B02818101BF67B9
+</div></div><div data-line="22" class="code-highlight-row unnumbered"><div class="code-highlight-line">8C4202D2BF8510B0F84752C26BF6C1E3C464B6678E612904F471A2D9E3A251B3
+</div></div><div data-line="23" class="code-highlight-row unnumbered"><div class="code-highlight-line">9416701F19290EC9957EA1EBB08ADABD3088018E7F81A57F3E287C3387EFDDC6
+</div></div><div data-line="24" class="code-highlight-row unnumbered"><div class="code-highlight-line">ABBA7CDD446F089930071EDD3D06EB0D69AA334F23C7C7E8648AFC4C3C781BEB
+</div></div><div data-line="25" class="code-highlight-row unnumbered"><div class="code-highlight-line">E6428949A2841E555B754685C2AAF2BA1E6F7F1A049CABFDC7FD5F577D028180
+</div></div><div data-line="26" class="code-highlight-row unnumbered"><div class="code-highlight-line">685B5CCCD5F1E69759EA84F47E5D1F9A8A1F59D526EBFDEEAE8791E6438BC8CA
+</div></div><div data-line="27" class="code-highlight-row unnumbered"><div class="code-highlight-line">7D56462180815D3F26E928259B78A0110FE25C956DE13354052661B8D3B4BCDA
+</div></div><div data-line="28" class="code-highlight-row unnumbered"><div class="code-highlight-line">84053853BC1BF3BF5FEF744AC2945365614FE039F17383FED6C697A965383564
+</div></div><div data-line="29" class="code-highlight-row unnumbered"><div class="code-highlight-line">C3D0AA74D2D0C8F55B965C96A72F25F2FC1C7BB272247E220FD54B7C7E3CE38B
+</div></div><div data-line="30" class="code-highlight-row unnumbered"><div class="code-highlight-line">0281804572D7658335A6FB1DAFAA98CF91742688262EB1E4A43FCCE51E15EBCF
+</div></div><div data-line="31" class="code-highlight-row unnumbered"><div class="code-highlight-line">DBE490A638A274814B2438A69BEA04AFA478CE6DAF68A0A8EBFCEFA3F3499E1F
+</div></div><div data-line="32" class="code-highlight-row unnumbered"><div class="code-highlight-line">70B01B10CBCF3406FDACE71B892D263C64B918E9030190FE5F7A9066498CB456
+</div></div><div data-line="33" class="code-highlight-row unnumbered"><div class="code-highlight-line">B2B52EC9C223CB1956F03C2EDFFA85F8DD5A940E2F215EEA15C3B7258EB9151B
+</div></div><div data-line="34" class="code-highlight-row unnumbered"><div class="code-highlight-line">2A7A8D0281810089A217111B58DD54CCFB00C4873DB4EF6716283AEA77D2B46D
+</div></div><div data-line="35" class="code-highlight-row unnumbered"><div class="code-highlight-line">85F1D8D47F2C0EC21AA37EBB26781C19EC43EB9583FB47205D83692D7CDCA952
+</div></div><div data-line="36" class="code-highlight-row unnumbered"><div class="code-highlight-line">8B69C19EEFC100624A31907B33AFB9008C4685EB8AB709B890D7C6A6BD50BD41
+</div></div><div data-line="37" class="code-highlight-row unnumbered"><div class="code-highlight-line">EE5A373FD31701F516FDB30C694243FBCB0851E237EA31703A2BC2A945EE5B9F
+</div></div><div data-line="38" class="code-highlight-row unnumbered"><div class="code-highlight-line">12DCD574F3FBCB</div></div></pre></div></figure>
+
+<p>We just need to convert this octet string to list of bytes and this will give us the RSA private key in DER format</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ xxd -r -p rsa-private.hex rsa-private.der
+</code></pre></div></div>
+
+<p>If you want the key in PEM format, just base64 encode the DER file</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ base64 -b 64 -i rsa-private.der
+</code></pre></div></div>
+
+<p>and encapsulate it with the <code class="highlighter-rouge">RSA PRIVATE KEY</code> boundary.
+Here is the final result</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEB1Ycpxf/heFNg16K1MuqmMpybi9la8QVCK0A2hjD2NuHLC4R9
+dHmL2VJJtCpHlxu1kD/Iepe31UGsWZlhuLDrbPJPffx5hDTq4uPU50HU/snGliCA
+FSBaUCWLaIpUdXUbNhxXyuvibbPPkqpPSmndk24Up6WAcs/0YQNe2dRI0RYeLA3/
+3yo2tCyrxrLY/ay3vEwROJDmkSTk+9SIr5+8VVDHWGxUEuAabenyqJZufBg8Wkyt
+2T6F/msShiEd7mLyknQ1j1aeIPFp8aLQEllxBQOsatHaj8LGxMaTPHjRrjfeMKCo
+Rnb9EdldQ7W5PAMvUs7CseY2/JTp/qLzIaZo/wIDAQABAoIBAC1CZ4HGi0gQrCJy
+dLUBGXQs1HGZShg27DdEa/0TddMPK4YOB2nVgug3872CNdRtv1q1oJrwn6/W3Mjm
+Qsfi207CghcgNzZ0mLpg69eUPkvbzLYRUUdiuadFdzgPMtpU/NfXyOlZQ5eqNYrA
+ZVREUC+In5ppbFr6NhGumX4LOy8BhcYCV+kNGVVUbwGQ31fxZ08K2RK9j/6urmWn
+ng2Xg+mA48XMwbGNUkKWuAa9pOwo3wKMzakf2UqJIo76G4KmsLTAoULufIkL6Xww
+9YIyvsJuiX4l/GG0MsxlH4JiITLzvjTnZGI+Tddd1GlwPACB3M5/WMij3HLUb7K+
+VI5a9kECgYEBDKiNl8kKVUTRymOlkWsgyi/JLFzi60NAnZUwCWMLMicj0VWBYQps
+/naGcQoAhndsiSkQZkakEYzck34bRD8y2LglX0q2MdEcgY1NNBHPctQXgPxjVOYZ
+i9a+bZeQwS9stZaxybrE9Ts0yDM3W2Dh7F73FAf7pSKb3s7jjIhBQysCgYEBv2e5
+jEIC0r+FELD4R1LCa/bB48RktmeOYSkE9HGi2eOiUbOUFnAfGSkOyZV+oeuwitq9
+MIgBjn+BpX8+KHwzh+/dxqu6fN1EbwiZMAce3T0G6w1pqjNPI8fH6GSK/Ew8eBvr
+5kKJSaKEHlVbdUaFwqryuh5vfxoEnKv9x/1fV30CgYBoW1zM1fHml1nqhPR+XR+a
+ih9Z1Sbr/e6uh5HmQ4vIyn1WRiGAgV0/JukoJZt4oBEP4lyVbeEzVAUmYbjTtLza
+hAU4U7wb879f73RKwpRTZWFP4Dnxc4P+1saXqWU4NWTD0Kp00tDI9VuWXJanLyXy
+/Bx7snIkfiIP1Ut8fjzjiwKBgEVy12WDNab7Ha+qmM+RdCaIJi6x5KQ/zOUeFevP
+2+SQpjiidIFLJDimm+oEr6R4zm2vaKCo6/zvo/NJnh9wsBsQy880Bv2s5xuJLSY8
+ZLkY6QMBkP5fepBmSYy0VrK1LsnCI8sZVvA8Lt/6hfjdWpQOLyFe6hXDtyWOuRUb
+KnqNAoGBAImiFxEbWN1UzPsAxIc9tO9nFig66nfStG2F8djUfywOwhqjfrsmeBwZ
+7EPrlYP7RyBdg2ktfNypUotpwZ7vwQBiSjGQezOvuQCMRoXrircJuJDXxqa9UL1B
+7lo3P9MXAfUW/bMMaUJD+8sIUeI36jFwOivCqUXuW58S3NV08/vL
+-----END RSA PRIVATE KEY-----
+</code></pre></div></div>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

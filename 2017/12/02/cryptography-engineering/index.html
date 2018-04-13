@@ -633,13 +633,13 @@ be48c659ee041edc12af8d47960776189902e011b1c6a54056a5b10d9618fa4a
 
 <p>Many systems contain so-called optimizations that are useless, counterproductive, or insignificant because they do not optimize those parts of the system that form the bottleneck. We have become quite conservative about optimizations. Usually we don’t bother with them.</p>
 
-<p>There are some programmers who implement assertion checking in development, but switch if off when they ship the product. This is not the security perspective.</p>
+<p>There are some programmers who implement assertion checking in development, but switch it off when they ship the product. This is not the security perspective.</p>
 
 <p>Ideally, one programmer implements the module and a second programmer implements the tests. Both work from the functional specification. Any misunderstanding between the two is a clear indication that the specification have to be clarified.</p>
 
 <p>The test code is about as big as the operational code, and we have not found a way fo significantly improving that.</p>
 
-<p>Writing high-quality code takes about as long as writing low-quality code, if you count the time from start to finished product, rather that from start to first buggy version.</p>
+<p>Writing high-quality code takes about as long as writing low-quality code, if you count the time from start to finished product, rather than from start to first buggy version.</p>
 
 <h2 id="9-generating-randomness">9. Generating Randomness</h2>
 
@@ -832,6 +832,19 @@ openssl asn1parse -i -in private.pem
 </div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">d mod (p-1) :C9A991ADCF64ACB687A3C3A75718AEEBA939B1C4000D35772A5D3F1E5741D2B22932C954FCBF18CEFA6FF6D49BA531400B17B900619CDA1645A95766DC704B2796E52E68CAD6D5920E6BDAE1AE7E1B5AA0A0A00D9FA305F9D3AA376188FF7BD52E28F5D8854B7B4A2A1CFB12A2CC9C919A1B97A0D76C460843A4D038F3A52785
 </div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">d mod (q-1) :7D02EB6A5ABAE26A93A22EFC639E839B10CC1B424709D56F3C8F877FBFF1E0799C76D785291DB93FCEDBDF97321FB47785457F1AC70D7592A6D0C18905A1BFAAF8A48BA6BCB57E5C65E20CFEBFBF56A12F2291504D561EFAD7E602E66041B33B834D1CF3D173BA096A1C024F5B6F0CB4EA85844AF3D35C639D18CDE5EC5C19D9
 </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">1/q mod p   :C63721E329520C8B40FB881907FD1712C04653D3D6BA84CCC75102444965157311FC08B8D96DF853366B64F1C0698A99DE35157EDA4806E1DB8D21BD45FF1BEDE9E4F69C0FEAA46B828D48C72326FF17C8FFD79EE6A9B204F4C310FF85F825D5EFD042B115CE43A21C1266913A99381A7D3DE12E50C25EB180A25982B16F8432</div></div></pre></div></figure>
+
+<p>Extract RSA public key from the private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rsa -in private.pem -pubout
+</code></pre></div></div>
+
+<p>Convert RSA public key between <a href="https://tools.ietf.org/html/rfc7468#section-13">PKIX</a>
+and
+<a href="https://tools.ietf.org/html/rfc8017#appendix-A.1.1">PKCS#1</a> formats</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rsa -pubin -in public.pem -RSAPublicKey_out
+openssl rsa -RSAPublicKey_in -in pkcs1-public.pem -pubout
+</code></pre></div></div>
 
 <p>RSA implementation in <a href="https://github.com/ndpar/erlang/blob/master/src/rsa.erl">Erlang</a>.</p>
 

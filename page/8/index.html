@@ -125,6 +125,47 @@
     
       <li>
         
+        <span class="post-meta">Jan 24, 2011</span>
+
+        <h2>
+          <a class="post-link" href="/2011/01/24/git-maven/">Maven and Git</a>
+        </h2>
+        <div class="entry-content">
+          <p>More and more Maven projects are switching from Subversion to Git, and the majority of those projects make the same mistake: They configure <em>scm</em> section of POM to point to remote repository, the same way they did it in Subversion</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;scm&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;url&gt;</span>http://github.com/SpringSource/spring-batch<span class="nt">&lt;/url&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;connection&gt;</span>scm:git:git://github.com/SpringSource/spring-batch.git<span class="nt">&lt;/connection&gt;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;developerConnection&gt;</span>scm:git:ssh://git@github.com/SpringSource/spring-batch.git<span class="nt">&lt;/developerConnection&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/scm&gt;</span></div></div></pre></div></figure>
+
+<p>By doing this they lose the main benefit of Git. They become dependent on the remote machine. And when their release depends on the remote machine, that’s what happens: They need to release the project but the remote machine is down</p>
+
+<p><img class="center" src="/images/posts/github-down.jpg" /></p>
+
+<p>The right way of configuring Git in Maven is following</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;scm&gt;</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;url&gt;</span>scm:git:file://.<span class="nt">&lt;/url&gt;</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;connection&gt;</span>scm:git:file://.<span class="nt">&lt;/connection&gt;</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nt">&lt;developerConnection&gt;</span>scm:git:file://.<span class="nt">&lt;/developerConnection&gt;</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="nt">&lt;/scm&gt;</span></div></div></pre></div></figure>
+
+<p>This configuration is universal, and it separates two orthogonal concerns: releases and remote copies.</p>
+
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li><a href="http://ascii.io/a/3459">Screencast</a> that shows how to work with Git in Maven projects.</li>
+</ul>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Nov 18, 2010</span>
 
         <h2>
@@ -508,75 +549,6 @@ $38.99 (<a href="http://www.amazon.com/Erlang-OTP-Action-Martin-Logan/dp/1933988
 <p>Whew! This happened to be longer review than I planned initially. If you are still with me, congratulations!</p>
 
 <p>There were much more presentations at this conference but because of the tight schedule I had to sacrifice 80% of them. My overall impression from this conference is very positive. If you are a Spring/Groovy/Grails developer I encourage you to go to this event next year. The biggest benefit of it: <em>You start seeing the Spring as a universe</em>, not as a bunch of separate projects. You cannot get this feeling from the documentation, even if it’s perfect as the Spring one.</p>
-
-        </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Mar 31, 2010</span>
-
-        <h2>
-          <a class="post-link" href="/2010/03/31/integrating-rabbitmq-with-ejabberd/">Integrating RabbitMQ with ejabberd</a>
-        </h2>
-        <div class="entry-content">
-          <p>ejabberd is integrated with RabbitMQ by means of <a href="http://tonyg.github.io/rabbitmq-xmpp/">mod_rabbitmq</a> gateway. If you followed my ejabberd installation <a href="/2010/02/23/get-started-with-ejabberd/">instructions</a>, you should already have mod_rabbitmq installed.</p>
-
-<h2 id="configure-mod_rabbitmq">Configure mod_rabbitmq</h2>
-
-<p>Open <em>/opt/ejabberd/ejabberd/etc/ejabberd/ejabberd.cfg</em> file, find <em>modules</em> section, and add mod_rabbitmq stanza to the list</p>
-
-<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/opt/ejabberd/ejabberd/etc/ejabberd/ejabberd.cfg</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7b;</span><span class="n">modules</span><span class="p">,</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">[</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p">...</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p">&#x7b;</span><span class="n">mod_rabbitmq</span><span class="p">,</span>  <span class="p">[&#x7b;</span><span class="n">rabbitmq_node</span><span class="p">,</span> <span class="nv">RABBIT_NODE</span><span class="p">&#x7d;]&#x7d;,</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p">...</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"> <span class="p">]&#x7d;.</span></div></div></pre></div></figure>
-
-<p>You need to replace <em>RABBIT_NODE</em> with the real value, which you can find from the RabbitMQ process information</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ps -ef | grep beam
-rabbitmq  8525  8142  0 16:37 pts/0    ... -sname rabbit@ubuntu ...
-</code></pre></div></div>
-
-<p>You can see my RabbitMQ node name is <em>rabbit@ubuntu</em>.</p>
-
-<h2 id="set-up-cookie">Set up cookie</h2>
-
-<p>To make RabbitMQ and ejabberd work together, they have to run in the same Erlang cluster. That means they have to use the same cookie file. If you <a href="/2010/03/14/get-started-with-rabbitmq/">installed</a> RabbitMQ from binary distribution, it uses the user’s cookie <em>~/.erlang.cookie</em>. ejabberd, on the other hand, uses its own cookie. Let’s replace it with the user’s</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /opt/ejabberd/ejabberd/var/lib/ejabberd
-$ rm -f .erlang.cookie
-$ ln -s ~/.erlang.cookie
-</code></pre></div></div>
-
-<p>Restart ejabberd server</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ /opt/ejabberd/ejabberd/sbin/ejabberdctl restart
-</code></pre></div></div>
-
-<h2 id="add-rabbit-buddy-to-roster">Add rabbit buddy to roster</h2>
-
-<p>The rabbit’s JID consists of two parts: exchange name and routing domain. The routing domain is a string <code class="highlighter-rouge">rabbitmq.EJABBERD_HOST</code> where <em>EJABBERD_HOST</em> is the host you registered in <em>ejabberd.cfg</em>. In my case the routing domain is <code class="highlighter-rouge">rabbitmq.jabber.ndpar.com</code>.</p>
-
-<p>For the name you can use any exchange name available in the RabbitMQ server. I use <code class="highlighter-rouge">amq.fanout</code> exchange which exists in every RabbitMQ server. So I go to my IM client (Adium) and add this user to the buddies list <code class="highlighter-rouge">amq.fanout@rabbitmq.jabber.ndpar.com</code>.</p>
-
-<h2 id="rabbits-greetings">Rabbit’s greetings</h2>
-
-<p>To publish a message to RabbitMQ I use the same Groovy script as in the previous <a href="/2010/03/14/get-started-with-rabbitmq/">post</a></p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./publisher.groovy
-</code></pre></div></div>
-
-<p><img class="center" src="/images/posts/mod_rabbitmq.png" /></p>
-
-<h3 id="resources">Resources</h3>
-
-<ul>
-  <li>Tony Garnock-Jones’ <a href="http://www.erlang-factory.com/upload/presentations/229/ErlangFactorySFBay2010-TonyGarnock-Jones.pdf">presentation slides</a> about RabbitMQ and its extensions.</li>
-</ul>
-
 
         </div>
         
