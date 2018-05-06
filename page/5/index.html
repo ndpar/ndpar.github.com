@@ -125,6 +125,41 @@
     
       <li>
         
+        <span class="post-meta">Jan 15, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/01/15/embrace-big-data/">Embrace Big Data</a>
+        </h2>
+        <div class="entry-content">
+          <p><img class="center" src="/images/posts/BigData.jpg" /></p>
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">Dec 15, 2012</span>
+
+        <h2>
+          <a class="post-link" href="/2012/12/15/rabbitmq-activemq-zeromq-hornetq/">RabbitMQ, ActiveMQ, ZeroMQ, HornetQ</a>
+        </h2>
+        <div class="entry-content">
+          <p><em>Warning</em>: In this post I’m going to compare <a href="http://www.rabbitmq.com/">RabbitMQ</a>, <a href="http://www.zeromq.org/">ZeroMQ</a>, <a href="http://activemq.apache.org/">ActiveMQ</a>, and <a href="http://www.jboss.org/hornetq">HornetQ</a>. The basis of the comparison is not the performance, or the scalability, or any other serious feature. The comparison is done <em>purely</em> based on the popularity of those systems. Therefore, if you came here to see some performance metrics, you will be disappointed — there is none in this post.</p>
+
+<p><em>Note</em>: To calculate popularity, I’m going to use MongoDB and Python, so if you don’t care about message brokers, but you want to see some examples of MongoDB scripts, this post might be interesting to you.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2012/12/15/rabbitmq-activemq-zeromq-hornetq/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Dec 9, 2012</span>
 
         <h2>
@@ -291,83 +326,6 @@
 <p>The conference was great. I’m glad I attended it. The organizers did a great job. The conference was beneficial not only to Python community but to Toronto programming community in general. Thanks to all who made it happen.</p>
 
 <p>P.S. Videos from the conference are available <a href="http://pyvideo.org/category/25/pycon-ca-2012">here</a>.</p>
-
-        </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Nov 8, 2012</span>
-
-        <h2>
-          <a class="post-link" href="/2012/11/08/simple-web-application-in-clojure/">Simple web application in Clojure</a>
-        </h2>
-        <div class="entry-content">
-          <p>This blog entry is a micro-tutorial on how to build a simple web application in Clojure. The reason I call it micro will be clear when I introduce the framework we are going to use. This tutorial will be interesting to programmers relatively new to Clojure, but who have some experience with web frameworks in other languages, for instance Spring MVC. The goal of this tutorial is to help you get started with web development in Clojure. Also I want to share my approach to web development in general and in Clojure in particular. This approach is by no means the best way to develop web applications, but because I like to watch how other people write the software, I thought somebody might be interested to see how I do it.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2012/11/08/simple-web-application-in-clojure/">Read on →</a>
-        </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Oct 1, 2012</span>
-
-        <h2>
-          <a class="post-link" href="/2012/10/01/exporting-solr-documents/">Exporting Solr documents</a>
-        </h2>
-        <div class="entry-content">
-          <p>Recently I had to copy some documents from one <a href="http://lucene.apache.org/solr/">Solr</a> server to another. I expected Solr already had an interface that allowed me to extract documents in the same format they were inserted. In that case I would pipe an output of one curl command to another, and consider the job done. As it turned out, the format of Solr input document is different than the output format. Here is how input document looks like:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;add&gt;
-    &lt;doc&gt;
-        &lt;field name="id"&gt;12345&lt;/field&gt;
-        &lt;field name="articlestate"&gt;published&lt;/field&gt;
-        &lt;field name="articletype"&gt;news&lt;/field&gt;
-        &lt;field name="body"&gt;Lorem ipsum dolor...&lt;/field&gt;
-        &lt;field name="referenceid"&gt;175820&lt;/field&gt;
-        &lt;field name="referenceid"&gt;163786&lt;/field&gt;
-        &lt;field name="created"&gt;2011-02-15T14:57:54.766Z&lt;/field&gt;
-    &lt;/doc&gt;
-&lt;/add&gt;
-</code></pre></div></div>
-
-<p>Notice the flat structure of this document: all element names are the same regardless of the filed type, and arrays (referenceid) are not grouped. Now compare it to the output format. Here is what you get when you execute a query against a Solr server:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;response&gt;
-    &lt;lst name="responseHeader"&gt;
-        &lt;int name="status"&gt;0&lt;/int&gt;
-        &lt;int name="QTime"&gt;1&lt;/int&gt;
-        &lt;lst name="params"&gt;
-            &lt;str name="q"&gt;id:12345&lt;/str&gt;
-        &lt;/lst&gt;
-    &lt;/lst&gt;
-    &lt;result name="response" numFound="1" start="0"&gt;
-        &lt;doc&gt;
-            &lt;str name="id"&gt;12345&lt;/str&gt;
-            &lt;str name="articlestate"&gt;published&lt;/str&gt;
-            &lt;str name="articletype"&gt;news&lt;/str&gt;
-            &lt;str name="body"&gt;Lorem ipsum dolor...&lt;/str&gt;
-            &lt;arr name="referenceid"&gt;
-                &lt;str&gt;175820&lt;/str&gt;
-                &lt;str&gt;163786&lt;/str&gt;
-            &lt;/arr&gt;
-            &lt;date name="created"&gt;2011-02-15T14:57:54.766Z&lt;/date&gt;
-        &lt;/doc&gt;
-    &lt;/result&gt;
-&lt;/response&gt;
-</code></pre></div></div>
-
-<p>Even if we ignore the response header, the structure of the response/result/doc is not the same as of input document: the element names reflect the types, the arrays are grouped. If you try to add this document to a Solr server, you will get an error “unexpected XML tag”, obviously. I googled for couple hours on how to convert an output document to an input, and, to my surprise, didn’t find any solution. Therefore I implemented my own converter in Groovy, which solved the problem. I post it <a href="http://gist.github.com/3813775">here</a> in case somebody needs it.</p>
-
-<p>Note: You can also use this script to re-index Solr.</p>
-
 
         </div>
         

@@ -125,6 +125,66 @@
     
       <li>
         
+        <span class="post-meta">Nov 7, 2016</span>
+
+        <h2>
+          <a class="post-link" href="/2016/11/07/ml-logistic-regression/">Machine Learning: Logistic Regression</a>
+        </h2>
+        <div class="entry-content">
+          <p><em>Logistic regression</em> is a classification case of <a href="/2016/10/28/ml-linear-regression">linear regression</a> whith
+dependent variable $y$ taking binary values.</p>
+
+<p>Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$,
+$x \in \mathbb{R}^{n+1}$, $x^{(i)} _ 0 = 0$, $y^{(i)} \in $ {0,1},
+find <em>classification function</em></p>
+
+<script type="math/tex; mode=display">h_\theta(x) = P(y = 1 | x; \theta)</script>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2016/11/07/ml-logistic-regression/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">Oct 28, 2016</span>
+
+        <h2>
+          <a class="post-link" href="/2016/10/28/ml-linear-regression/">Machine Learning: Linear Regression</a>
+        </h2>
+        <div class="entry-content">
+          <p>Let $y$ be a dependent variable of a feature vector $x$</p>
+
+<script type="math/tex; mode=display">x =
+\begin{pmatrix}
+1 \\
+x_1 \\
+x_2 \\
+\vdots \\
+x_n \\
+\end{pmatrix}</script>
+
+<p>Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$,
+find the value of $y$ on any input vector $x$.</p>
+
+<p>We solve this problem by constructing a <em>hypothesis funciton</em> $h_\theta(x)$
+using one of the methods below.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2016/10/28/ml-linear-regression/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Apr 3, 2015</span>
 
         <h2>
@@ -194,78 +254,6 @@
         
         <footer>
           <a rel="full-article" href="/2014/10/13/gc-visualization/">Read on →</a>
-        </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Oct 12, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/10/12/fft-j/">Fast Fourier transform in J</a>
-        </h2>
-        <div class="entry-content">
-          <p>In the previous <a href="/2014/10/11/dft-j/">post</a> we discussed the discrete Fourier transform (DFT). Its J implementation was pretty straightforward, and the program looked almost identical to its mathematical definition. In this post, I want to explore how to implement fast Fourier transform (FFT), a recursively defined version of DFT that reduces algorithmic complexity from $O(n^2)$ to $O(N\log{N})$.</p>
-
-<h2 id="math">Math</h2>
-
-<p>Recall the DFT formula from the previous post</p>
-
-<script type="math/tex; mode=display">\mathcal{F}_N\mathbf{f}[m] = \sum_{n=0}^{N-1} \mathbf{f}[n] e^{-2\pi i mn/N}, \quad m = 0, \dots , N-1</script>
-
-<p>I use a slightly different notation here to make recursive definition easier to understand.</p>
-
-<p>We assume that <em>N</em> is a power of 2. Using basic arithmetic and properties of complex exponentials, we can derive the formula for the DFT of order <em>2N</em> in terms of two DFTs of order <em>N</em></p>
-
-<script type="math/tex; mode=display">\mathcal{F}_{2N}\mathbf{f}[m]=\mathcal{F}_N\mathbf{f}_{even}+e^{-\pi im/N}\mathcal{F}_N\mathbf{f}_{odd}</script>
-
-<script type="math/tex; mode=display">\mathcal{F}_{2N}\mathbf{f}[m+N]=\mathcal{F}_N\mathbf{f}_{even}-e^{-\pi im/N}\mathcal{F}_N\mathbf{f}_{odd}</script>
-
-<p>where $m=0,\dots,N-1$. The base case, when $N=1$, is</p>
-
-<script type="math/tex; mode=display">\mathcal{F}_1\mathbf{f}[0] = \mathbf{f}[0]</script>
-
-<p>i.e. the identity function.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2014/10/12/fft-j/">Read on →</a>
-        </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Oct 11, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/10/11/dft-j/">Discrete Fourier transform in J</a>
-        </h2>
-        <div class="entry-content">
-          <p>The Fourier analysis in general and the Fourier transform in particular has always been one of my favourite topics in mathematics. When I started learning the <a href="http://www.jsoftware.com">J programming language</a> I thought that implementing the discrete Fourier transform (DFT) in J must be really elegant. One rainy weekend I finally found time to do that, and this post is a result of my experiments.</p>
-
-<h2 id="math">Math</h2>
-
-<p>The definition of one-dimensional DFT is pretty simple. It is just a function that maps a given vector <strong>f</strong> of length <em>N</em> to a vector <strong>F</strong> of the same length by the following formula</p>
-
-<script type="math/tex; mode=display">\mathbf{F}[m] = \sum_{n=0}^{N-1} \mathbf{f}[n] e^{-2\pi i mn/N}, \quad m = 0, \dots , N-1</script>
-
-<p>To implement this formula the only thing we need is basic arithmetic for complex numbers. Not only does J provide such an arithmetic, it has special code for complex exponentiation, which makes the implementation much easier than it would be in other languages.</p>
-
-<p>Before we start coding let’s rewrite the formula in terms of matrix multiplication so that we can utilize this feature of J. Let $\omega$ be the primitive <em>N</em>th root of unity $\omega = e^{2\pi i/N}$, then the DFT formula becomes</p>
-
-<script type="math/tex; mode=display">\mathbf{F} = \mathbf{f} \cdot \Omega</script>
-
-<p>where <strong>f</strong> is an input vector and $\Omega$ is a symmetric matrix $(\omega^{-mn})$ with $m,n=0,\dots,N-1$.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2014/10/11/dft-j/">Read on →</a>
         </footer>
         
       </li>

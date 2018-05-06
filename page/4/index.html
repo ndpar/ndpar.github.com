@@ -125,6 +125,56 @@
     
       <li>
         
+        <span class="post-meta">Jun 11, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/06/11/sleeping-barber-in-erlang/">Sleeping Barber in Erlang</a>
+        </h2>
+        <div class="entry-content">
+          <p>After working on <a href="http://en.wikipedia.org/wiki/Sleeping_barber_problem"><em>Sleeping Barber</em></a> problem at <a href="http://www.meetup.com/Toronto-Coding-Dojo/events/120577762/">Coding Dojo</a> I decided to implement it in Erlang. Because Erlang is the perfect language for these sorts of problems, many people have alredy solved it in many different ways. I found at least three groups of solutions: 1) direct implementation using message passing between processes, 2) OTP solution using <em>gen_server</em>, and 3) something resembling object-oriented approach.</p>
+
+<p>Strangely enough, I didn’t see any solution based on <a href="https://en.wikipedia.org/wiki/Finite-state_machine">FSM</a>. That is odd because this is the first thing coming to my mind when I hear this problem. To fill the gap, I’m going to solve it using <em>gen_fsm</em>, which is a standard OTP behaviour for FSM.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2013/06/11/sleeping-barber-in-erlang/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">May 26, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/05/26/entrepreneur/">To be or not to be… entrepreneur</a>
+        </h2>
+        <div class="entry-content">
+          <p><a href="http://www.infoq.com/interviews/rod-johnson-entrepreneurialism">Rod Johnson</a>, creator of Spring, programmer that became entrepreneur:</p>
+
+<blockquote>
+  <p>One thing I think that you really need to be careful of as well, particularly if you, like me, are a programmer, is don’t get carried away writing code. Typically in my experience anyone who is a good programmer is pretty passionate about it, love writing code, get addicted to the process of writing code, fell pretty good about their code basis. As soon as you get down that path you are not thinking straight anymore and now you are increasing your emotional investment, you are having lots of fun writing interesting code and you are no longer in a place mentally where you are going to be trying to find some reason that you shouldn’t write that code. That has been a big lesson for me that the quicker I get to coding, the longer it takes me to ask the kind of questions I should ask upfront.</p>
+</blockquote>
+
+<p><a href="http://www.youtube.com/watch?v=MShbP3OpASA">Linus Torvalds</a>, creator of Linux, programmer that still programs:</p>
+
+<blockquote>
+  <p>I’m interested in programming. When business started happening, I didn’t get into this for the business side. I wanted to do programming. When other people started selling Linux, I said “Yes! Now I can avoid caring about that side too.”</p>
+</blockquote>
+
+<blockquote>
+  <p>I never had to deal with single business related thing in Linux ever. Seriously, I had to deal with lot of other things but business related things… I got queries and I just said “I don’t care.”</p>
+</blockquote>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">May 21, 2013</span>
 
         <h2>
@@ -257,41 +307,6 @@ $ ps -ef | grep java
 
 
         </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jan 15, 2013</span>
-
-        <h2>
-          <a class="post-link" href="/2013/01/15/embrace-big-data/">Embrace Big Data</a>
-        </h2>
-        <div class="entry-content">
-          <p><img class="center" src="/images/posts/BigData.jpg" /></p>
-
-        </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Dec 15, 2012</span>
-
-        <h2>
-          <a class="post-link" href="/2012/12/15/rabbitmq-activemq-zeromq-hornetq/">RabbitMQ, ActiveMQ, ZeroMQ, HornetQ</a>
-        </h2>
-        <div class="entry-content">
-          <p><em>Warning</em>: In this post I’m going to compare <a href="http://www.rabbitmq.com/">RabbitMQ</a>, <a href="http://www.zeromq.org/">ZeroMQ</a>, <a href="http://activemq.apache.org/">ActiveMQ</a>, and <a href="http://www.jboss.org/hornetq">HornetQ</a>. The basis of the comparison is not the performance, or the scalability, or any other serious feature. The comparison is done <em>purely</em> based on the popularity of those systems. Therefore, if you came here to see some performance metrics, you will be disappointed — there is none in this post.</p>
-
-<p><em>Note</em>: To calculate popularity, I’m going to use MongoDB and Python, so if you don’t care about message brokers, but you want to see some examples of MongoDB scripts, this post might be interesting to you.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2012/12/15/rabbitmq-activemq-zeromq-hornetq/">Read on →</a>
-        </footer>
         
       </li>
     

@@ -154,6 +154,85 @@ ISBN: 978-0470474242</p>
     
       <li>
         
+        <span class="post-meta">Apr 24, 2017</span>
+
+        <h2>
+          <a class="post-link" href="/2017/04/24/cryptography-tools/">Cryptography Tools</a>
+        </h2>
+        <div class="entry-content">
+          <h2 id="randomness">Randomness</h2>
+
+<p>Generate 33 random bytes (wrapped in 44 characters)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -base64 33 -out pass.txt
+</code></pre></div></div>
+
+<p>Output random bytes in hex format</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -hex 33
+</code></pre></div></div>
+
+<h2 id="certificate-authority">Certificate Authority</h2>
+
+<p>Create a CA certificate (refer to <a href="https://gist.github.com/ndpar/867893f78f8e36a7cbcf279f0d2a60ad#file-openssl-ca-cnf">openssl-ca.cnf</a> file)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -days 3000 -out cacert.pem -keyout cakey.pem -passout file:pass.txt
+</code></pre></div></div>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2017/04/24/cryptography-tools/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">Apr 17, 2017</span>
+
+        <h2>
+          <a class="post-link" href="/2017/04/17/p1-p8/">PKCS #1, PKCS #8, X.509</a>
+        </h2>
+        <div class="entry-content">
+          <h2 id="rfc8017-pkcs-1-v22"><a href="https://tools.ietf.org/html/rfc8017#appendix-A.1">RFC8017</a> (PKCS #1 v.2.2)</h2>
+
+<p>Defines the traditional format for RSA keys. Two <strong>structures</strong>:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">-----BEGIN RSA PRIVATE KEY-----
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">RSAPrivateKey
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">-----END RSA PRIVATE KEY-----</div></div></pre></div></figure>
+
+<p>and</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line">-----BEGIN RSA PUBLIC KEY-----
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">RSAPublicKey
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">-----END RSA PUBLIC KEY-----</div></div></pre></div></figure>
+
+<p><strong>Commands</strong></p>
+
+<p>Generate RSA private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl genrsa -out private.pem 2048
+</code></pre></div></div>
+
+<p>Extract public key from RSA private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rsa -in private.pem -out public.pem -RSAPublicKey_out
+</code></pre></div></div>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2017/04/17/p1-p8/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Apr 11, 2017</span>
 
         <h2>
@@ -204,66 +283,6 @@ and the <a href="https://github.com/ndpar/oauth-demo/blob/master/client/src/main
         
         <footer>
           <a rel="full-article" href="/2016/12/24/spring-oauth2/">Read on →</a>
-        </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Nov 7, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/2016/11/07/ml-logistic-regression/">Machine Learning: Logistic Regression</a>
-        </h2>
-        <div class="entry-content">
-          <p><em>Logistic regression</em> is a classification case of <a href="/2016/10/28/ml-linear-regression">linear regression</a> whith
-dependent variable $y$ taking binary values.</p>
-
-<p>Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$,
-$x \in \mathbb{R}^{n+1}$, $x^{(i)} _ 0 = 0$, $y^{(i)} \in $ {0,1},
-find <em>classification function</em></p>
-
-<script type="math/tex; mode=display">h_\theta(x) = P(y = 1 | x; \theta)</script>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2016/11/07/ml-logistic-regression/">Read on →</a>
-        </footer>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Oct 28, 2016</span>
-
-        <h2>
-          <a class="post-link" href="/2016/10/28/ml-linear-regression/">Machine Learning: Linear Regression</a>
-        </h2>
-        <div class="entry-content">
-          <p>Let $y$ be a dependent variable of a feature vector $x$</p>
-
-<script type="math/tex; mode=display">x =
-\begin{pmatrix}
-1 \\
-x_1 \\
-x_2 \\
-\vdots \\
-x_n \\
-\end{pmatrix}</script>
-
-<p>Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$,
-find the value of $y$ on any input vector $x$.</p>
-
-<p>We solve this problem by constructing a <em>hypothesis funciton</em> $h_\theta(x)$
-using one of the methods below.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2016/10/28/ml-linear-regression/">Read on →</a>
         </footer>
         
       </li>

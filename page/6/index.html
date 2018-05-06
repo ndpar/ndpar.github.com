@@ -125,6 +125,83 @@
     
       <li>
         
+        <span class="post-meta">Nov 8, 2012</span>
+
+        <h2>
+          <a class="post-link" href="/2012/11/08/simple-web-application-in-clojure/">Simple web application in Clojure</a>
+        </h2>
+        <div class="entry-content">
+          <p>This blog entry is a micro-tutorial on how to build a simple web application in Clojure. The reason I call it micro will be clear when I introduce the framework we are going to use. This tutorial will be interesting to programmers relatively new to Clojure, but who have some experience with web frameworks in other languages, for instance Spring MVC. The goal of this tutorial is to help you get started with web development in Clojure. Also I want to share my approach to web development in general and in Clojure in particular. This approach is by no means the best way to develop web applications, but because I like to watch how other people write the software, I thought somebody might be interested to see how I do it.</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2012/11/08/simple-web-application-in-clojure/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
+        <span class="post-meta">Oct 1, 2012</span>
+
+        <h2>
+          <a class="post-link" href="/2012/10/01/exporting-solr-documents/">Exporting Solr documents</a>
+        </h2>
+        <div class="entry-content">
+          <p>Recently I had to copy some documents from one <a href="http://lucene.apache.org/solr/">Solr</a> server to another. I expected Solr already had an interface that allowed me to extract documents in the same format they were inserted. In that case I would pipe an output of one curl command to another, and consider the job done. As it turned out, the format of Solr input document is different than the output format. Here is how input document looks like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;add&gt;
+    &lt;doc&gt;
+        &lt;field name="id"&gt;12345&lt;/field&gt;
+        &lt;field name="articlestate"&gt;published&lt;/field&gt;
+        &lt;field name="articletype"&gt;news&lt;/field&gt;
+        &lt;field name="body"&gt;Lorem ipsum dolor...&lt;/field&gt;
+        &lt;field name="referenceid"&gt;175820&lt;/field&gt;
+        &lt;field name="referenceid"&gt;163786&lt;/field&gt;
+        &lt;field name="created"&gt;2011-02-15T14:57:54.766Z&lt;/field&gt;
+    &lt;/doc&gt;
+&lt;/add&gt;
+</code></pre></div></div>
+
+<p>Notice the flat structure of this document: all element names are the same regardless of the filed type, and arrays (referenceid) are not grouped. Now compare it to the output format. Here is what you get when you execute a query against a Solr server:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;response&gt;
+    &lt;lst name="responseHeader"&gt;
+        &lt;int name="status"&gt;0&lt;/int&gt;
+        &lt;int name="QTime"&gt;1&lt;/int&gt;
+        &lt;lst name="params"&gt;
+            &lt;str name="q"&gt;id:12345&lt;/str&gt;
+        &lt;/lst&gt;
+    &lt;/lst&gt;
+    &lt;result name="response" numFound="1" start="0"&gt;
+        &lt;doc&gt;
+            &lt;str name="id"&gt;12345&lt;/str&gt;
+            &lt;str name="articlestate"&gt;published&lt;/str&gt;
+            &lt;str name="articletype"&gt;news&lt;/str&gt;
+            &lt;str name="body"&gt;Lorem ipsum dolor...&lt;/str&gt;
+            &lt;arr name="referenceid"&gt;
+                &lt;str&gt;175820&lt;/str&gt;
+                &lt;str&gt;163786&lt;/str&gt;
+            &lt;/arr&gt;
+            &lt;date name="created"&gt;2011-02-15T14:57:54.766Z&lt;/date&gt;
+        &lt;/doc&gt;
+    &lt;/result&gt;
+&lt;/response&gt;
+</code></pre></div></div>
+
+<p>Even if we ignore the response header, the structure of the response/result/doc is not the same as of input document: the element names reflect the types, the arrays are grouped. If you try to add this document to a Solr server, you will get an error “unexpected XML tag”, obviously. I googled for couple hours on how to convert an output document to an input, and, to my surprise, didn’t find any solution. Therefore I implemented my own converter in Groovy, which solved the problem. I post it <a href="http://gist.github.com/3813775">here</a> in case somebody needs it.</p>
+
+<p>Note: You can also use this script to re-index Solr.</p>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Nov 5, 2011</span>
 
         <h2>
@@ -212,110 +289,6 @@ plot "thomae.dat" using 1:2 with points
 </code></pre></div></div>
 
 <p>and Photoshop.</p>
-
-
-        </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jun 27, 2011</span>
-
-        <h2>
-          <a class="post-link" href="/2011/06/27/math-and-physics-of-benderama/">Math and Physics of Benderama</a>
-        </h2>
-        <div class="entry-content">
-          <p>The last episode of <a href="http://theinfosphere.org/Benderama">Futurama</a> has interesting formula involved. The entire plot is based on the Professor’s latest invention — <a href="http://en.wikipedia.org/wiki/Banach&#8211;Tarski_paradox">Banach-Tarski</a> Dupla-Shrinker — the machine that produces two copies of any object at a 60% scale. It was just a matter of time when Bender found a proper usage of this machine: to replicate himself. Then two small copies of Bender replicated themselves making four smaller copies, and so forth. At some point the Professor horrified the crew that if they don’t stop this unlimited growth, the total mass of all Benders will eventually be so big that the entire Earth will be consumed during the process of replication. As a proof he demonstrated this formula of the mass of all generations of Bender</p>
-
-<p><img class="center" src="http://pool.theinfosphere.org/images/thumb/0/04/Benderama_Maths.png/800px-Benderama_Maths.png" /></p>
-
-<p>This is a perfect toy for a science geek. The first obvious question it brings: is this formula mathematically correct? As it turns out, it is not. Considering the scale of 60%, the cubic dependency of volume on linear dimension, and the constant density of all copies, the formula should be the following</p>
-
-<script type="math/tex; mode=display">M = \displaystyle\sum\limits_{n=0}^\infty 2^n\left[\left(\frac{3}{5}\right)^{3n} M_0\right] = \displaystyle\sum\limits_{n=0}^\infty 2^n\left[\left(\frac{27}{125}\right)^n M_0\right] = \displaystyle\sum\limits_{n=0}^\infty\left(\frac{54}{125}\right)^n M_0 = \frac{125}{71} M_0</script>
-
-<p>As you can see the total mass of infinite number of Benders actually converges to approximately 1.76 <em>M</em><sub>0</sub>. So from Math perspective there is nothing to worry about. But what if our assumption of constant density is invalid. Would it be a problem from Physics perspective? Let’s see.</p>
-
-<p>Knowing that every new copy has a size of 0.6 of the original it was made from, we have the following formula for the size of Bender in the <em>n</em><sup>th</sup> generation</p>
-
-<script type="math/tex; mode=display">L_n = 0.6^n L_0</script>
-
-<p>This exponential function becomes very small pretty soon. In the <a href="http://www.wolframalpha.com/input/?i=0.6%5E154">154</a><sup>th</sup> generation it already reaches the <a href="http://en.wikipedia.org/wiki/Planck_length">Planck length</a>, after which the further replication is physically impossible. If we calculate the total mass of 154 Bender’s generations using the Professor’s formula, we get <a href="http://www.wolframalpha.com/input/?i=H%28154%29">H(154)</a> × <a href="http://www.peelified.com/Futurama-Forum-1/Topic-4095-0-Benders_Weight.html">238</a> kg ≈ 1,337.56 kg, which is nothing comparing to the Earth mass.</p>
-
-<p>So we have to admit that from both Math and Physics perspective the Professor was wrong, and there was no real threat to the Earth.</p>
-
-<p>Although the Professor’s formula doesn’t describe the replication process adequately, it’s still a beautiful piece of Math because it’s a formula of <a href="http://en.wikipedia.org/wiki/Harmonic_series_(mathematics)">harmonic series</a>. If you want to know why harmonic series is beautiful and which real processes it describes, read this nice <a href="http://plus.maths.org/content/perfect-harmony">article</a> of John H. Webb.</p>
-
-<p>And don’t miss the next <a href="http://theinfosphere.org/Ghost_in_the_Machines">episode</a> of Futurama this Thursday :-)</p>
-
-
-        </div>
-        
-      </li>
-    
-      <li>
-        
-        <span class="post-meta">Jun 8, 2011</span>
-
-        <h2>
-          <a class="post-link" href="/2011/06/08/functional-groovy-switch-statement/">Functional Groovy switch statement</a>
-        </h2>
-        <div class="entry-content">
-          <p>In the previous <a href="/2011/06/01/reversing-groovy-switch-statement">post</a> I showed how to replace chained if-else statements in Groovy with one concise switch. It was done for the special case of if-stement where every branch was evaluated using the same condition function. Today I want to make a generalization of that technique by allowing to use different conditionals.</p>
-
-<p>Suppose your code looks like this:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">if</span> <span class="o">(</span><span class="n">param</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s1">'even'</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">param</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s1">'threeven'</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">param</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s1">'positive'</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span> <span class="k">else</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="s1">'negative'</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>As long as every condition operates on the same parameter, you can replace the entire chain with a switch. In this scenario <code class="highlighter-rouge">param</code> becomes a switch parameter and conditions become <code class="highlighter-rouge">case</code> parameters of Closure type. The only thing we need to do is to override <code class="highlighter-rouge">Closure.isCase()</code> method as I described in the previous post. The safest way to do it is to create a category class:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kd">class</span> <span class="nc">CaseCategory</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isCase</span><span class="o">(</span><span class="n">Closure</span> <span class="n">casePredicate</span><span class="o">,</span> <span class="n">Object</span> <span class="n">switchParameter</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">casePredicate</span><span class="o">.</span><span class="na">call</span> <span class="n">switchParameter</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>Now we can replace if-statement with the following switch:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">use</span> <span class="o">(</span><span class="n">CaseCategory</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">switch</span> <span class="o">(</span><span class="n">param</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="o">&#x7b;</span> <span class="n">it</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&#x7d;</span> <span class="o">:</span> <span class="k">return</span> <span class="s1">'even'</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="o">&#x7b;</span> <span class="n">it</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&#x7d;</span> <span class="o">:</span> <span class="k">return</span> <span class="s1">'threeven'</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="o">&#x7b;</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">it</span> <span class="o">&#x7d;</span>      <span class="o">:</span> <span class="k">return</span> <span class="s1">'positive'</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">default</span>              <span class="o">:</span> <span class="k">return</span> <span class="s1">'negative'</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>We can actually go further and extract in-line closures:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">even</span> <span class="o">=</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">it</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">threeven</span> <span class="o">=</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="n">it</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="n">positive</span> <span class="o">=</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">it</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>After which the code becomes even more readable:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="n">use</span> <span class="o">(</span><span class="n">CaseCategory</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="k">switch</span> <span class="o">(</span><span class="n">param</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="n">even</span>     <span class="o">:</span> <span class="k">return</span> <span class="s1">'even'</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="n">threeven</span> <span class="o">:</span> <span class="k">return</span> <span class="s1">'threeven'</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="n">positive</span> <span class="o">:</span> <span class="k">return</span> <span class="s1">'positive'</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">default</span>       <span class="o">:</span> <span class="k">return</span> <span class="s1">'negative'</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="o">&#x7d;</span></div></div></pre></div></figure>
 
 
         </div>

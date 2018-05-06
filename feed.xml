@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://blog.ndpar.com/feed.xml" rel="self" type="application/atom+xml" /><link href="http://blog.ndpar.com/" rel="alternate" type="text/html" /><updated>2018-04-13T12:51:36-04:00</updated><id>http://blog.ndpar.com/</id><title type="html">Side Notes</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Andrey Paramonov</name></author><entry><title type="html">Cryptography Engineering</title><link href="http://blog.ndpar.com/2017/12/02/cryptography-engineering/" rel="alternate" type="text/html" title="Cryptography Engineering" /><published>2017-12-02T11:05:33-05:00</published><updated>2017-12-02T11:05:33-05:00</updated><id>http://blog.ndpar.com/2017/12/02/cryptography-engineering</id><content type="html" xml:base="http://blog.ndpar.com/2017/12/02/cryptography-engineering/">&lt;p&gt;&lt;img class=&quot;left&quot; src=&quot;https://www.schneier.com/books/cryptography_engineering/book-ce-200w.jpg&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-06T16:40:59-04:00</updated><id>http://localhost:4000/</id><title type="html">Side Notes</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Andrey Paramonov</name></author><entry><title type="html">Cryptography Engineering</title><link href="http://localhost:4000/2017/12/02/cryptography-engineering/" rel="alternate" type="text/html" title="Cryptography Engineering" /><published>2017-12-02T11:05:33-05:00</published><updated>2017-12-02T11:05:33-05:00</updated><id>http://localhost:4000/2017/12/02/cryptography-engineering</id><content type="html" xml:base="http://localhost:4000/2017/12/02/cryptography-engineering/">&lt;p&gt;&lt;img class=&quot;left&quot; src=&quot;https://www.schneier.com/books/cryptography_engineering/book-ce-200w.jpg&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;These are my notes on the book &lt;a href=&quot;https://www.schneier.com/books/cryptography_engineering/&quot;&gt;Cryptography Engineering&lt;/a&gt; by&lt;br /&gt;
 Niels Ferguson, Bruce Schneier, Tadayoshi Kohno&lt;br /&gt;
@@ -850,7 +850,199 @@ keytool -printcert -v -file certificates.pem
 
 &lt;p&gt;Many standards are internally inconsistent, or even contradict themselves.&lt;/p&gt;
 
-&lt;p&gt;For reasons of simplicity and consistency, which are crucial to the overall security, a security system must be designed by a small group of experts.&lt;/p&gt;</content><author><name>Andrey Paramonov</name></author><category term="books" /><category term="cryptography" /><category term="erlang" /><category term="groovy" /><category term="j" /><category term="shell" /><summary type="html">These are my notes on the book Cryptography Engineering by Niels Ferguson, Bruce Schneier, Tadayoshi Kohno Paperback: 384 pages Publisher: John Wiley &amp;amp; Sons; March 2010 ISBN: 978-0470474242 “The world is full of bad security systems designed by people who have read Applied Cryptography.” Cryptography Engineering could have the same effect.</summary></entry><entry><title type="html">RSA Private Key</title><link href="http://blog.ndpar.com/2017/04/11/rsa-private-key/" rel="alternate" type="text/html" title="RSA Private Key" /><published>2017-04-11T06:32:13-04:00</published><updated>2017-04-11T06:32:13-04:00</updated><id>http://blog.ndpar.com/2017/04/11/rsa-private-key</id><content type="html" xml:base="http://blog.ndpar.com/2017/04/11/rsa-private-key/">&lt;blockquote&gt;
+&lt;p&gt;For reasons of simplicity and consistency, which are crucial to the overall security, a security system must be designed by a small group of experts.&lt;/p&gt;</content><author><name>Andrey Paramonov</name></author><category term="books" /><category term="cryptography" /><category term="erlang" /><category term="groovy" /><category term="j" /><category term="shell" /><summary type="html">These are my notes on the book Cryptography Engineering by Niels Ferguson, Bruce Schneier, Tadayoshi Kohno Paperback: 384 pages Publisher: John Wiley &amp;amp; Sons; March 2010 ISBN: 978-0470474242 “The world is full of bad security systems designed by people who have read Applied Cryptography.” Cryptography Engineering could have the same effect.</summary></entry><entry><title type="html">Cryptography Tools</title><link href="http://localhost:4000/2017/04/24/cryptography-tools/" rel="alternate" type="text/html" title="Cryptography Tools" /><published>2017-04-24T14:42:14-04:00</published><updated>2017-04-24T14:42:14-04:00</updated><id>http://localhost:4000/2017/04/24/cryptography-tools</id><content type="html" xml:base="http://localhost:4000/2017/04/24/cryptography-tools/">&lt;h2 id=&quot;randomness&quot;&gt;Randomness&lt;/h2&gt;
+
+&lt;p&gt;Generate 33 random bytes (wrapped in 44 characters)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl rand -base64 33 -out pass.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Output random bytes in hex format&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl rand -hex 33
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;certificate-authority&quot;&gt;Certificate Authority&lt;/h2&gt;
+
+&lt;p&gt;Create a CA certificate (refer to &lt;a href=&quot;https://gist.github.com/ndpar/867893f78f8e36a7cbcf279f0d2a60ad#file-openssl-ca-cnf&quot;&gt;openssl-ca.cnf&lt;/a&gt; file)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -days 3000 -out cacert.pem -keyout cakey.pem -passout file:pass.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;Inspect the certificate&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -in cacert.pem -noout -text
+openssl x509 -in cacert.pem -noout -purpose
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Create a new (RSA) private key and a corresponding CSR (refer to &lt;a href=&quot;https://gist.github.com/ndpar/867893f78f8e36a7cbcf279f0d2a60ad#file-openssl-server-cnf&quot;&gt;openssl-server.cnf&lt;/a&gt; file)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl req -config openssl-server.cnf -newkey rsa:2048 -sha256 -out servercert.csr -keyout serverkey.pem -nodes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Create a CSR for an existing private key&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl req -new -config openssl-server.cnf -key serverkey.pem -sha256 -out servercert.csr -nodes
+openssl req -verify -in servercert.csr -text -noout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Initiate the database for signing certs&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;touch index.txt
+echo '01' &amp;gt; serial.txt
+mkdir newcerts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Sign the CSR by the CA certificate&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out servercert.pem -passin file:pass.txt -infiles servercert.csr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rfc7292-pkcs-12&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc7292&quot;&gt;RFC7292&lt;/a&gt; (PKCS #12)&lt;/h2&gt;
+
+&lt;p&gt;Package a private key with a certificate into PKCS12 keystore&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl pkcs12 -export -in servercert.pem -inkey serverkey.pem -out keystore.p12 -name server -CAfile cacert.pem -caname root -chain
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Generate a (symmetric AES) secret key and package it into the keystore&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -genseckey -alias symkey -keyalg AES -keysize 256 -storetype PKCS12 -keystore symkeystore.p12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Merge multiple keystores&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -importkeystore -srckeystore keystore2.p12 -srcstoretype PKCS12 -destkeystore keystore.p12 -deststoretype PKCS12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Import a certificate into the keystore&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -importcert -file cert.cer -keystore keystore.p12 -alias name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rfc2315-pkcs-7-and-rfc5652-cms&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc2315&quot;&gt;RFC2315&lt;/a&gt; (PKCS #7) and &lt;a href=&quot;https://tools.ietf.org/html/rfc5652&quot;&gt;RFC5652&lt;/a&gt; (CMS)&lt;/h2&gt;
+
+&lt;p&gt;Encrypt the file for the recipient in CMS format&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl cms -encrypt -recip servercert.pem -binary -in file -outform der -out file.p7
+openssl cms -encrypt -recip servercert.pem -binary -in file -outform pem -out file.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Encrypt the file for the recipient in PKCS7 format&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl smime -encrypt -binary -in file -outform pem -out file.pem servercert.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Decrypt the CMS message with the private key&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl cms -decrypt -inkey serverkey.pem -in file.p7  -inform der -out file
+openssl cms -decrypt -inkey serverkey.pem -in file.pem -inform pem -out file
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;links&quot;&gt;Links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.sslshopper.com/article-most-common-openssl-commands.html&quot;&gt;The most common OpenSSL commands&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/21297139/how-do-you-sign-a-certificate-signing-request-with-your-certification-authority&quot;&gt;OpenSSL config files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.ndpar.com/2017/04/17/p1-p8/&quot;&gt;PKCS #1 and PKCS #8 commands&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="cryptography" /><category term="shell" /><summary type="html">Randomness Generate 33 random bytes (wrapped in 44 characters) openssl rand -base64 33 -out pass.txt Output random bytes in hex format openssl rand -hex 33 Certificate Authority Create a CA certificate (refer to openssl-ca.cnf file) openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -days 3000 -out cacert.pem -keyout cakey.pem -passout file:pass.txt</summary></entry><entry><title type="html">PKCS #1, PKCS #8, X.509</title><link href="http://localhost:4000/2017/04/17/p1-p8/" rel="alternate" type="text/html" title="PKCS #1, PKCS #8, X.509" /><published>2017-04-17T15:49:12-04:00</published><updated>2017-04-17T15:49:12-04:00</updated><id>http://localhost:4000/2017/04/17/p1-p8</id><content type="html" xml:base="http://localhost:4000/2017/04/17/p1-p8/">&lt;h2 id=&quot;rfc8017-pkcs-1-v22&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc8017#appendix-A.1&quot;&gt;RFC8017&lt;/a&gt; (PKCS #1 v.2.2)&lt;/h2&gt;
+
+&lt;p&gt;Defines the traditional format for RSA keys. Two &lt;strong&gt;structures&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----BEGIN RSA PRIVATE KEY-----
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;RSAPrivateKey
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----END RSA PRIVATE KEY-----&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----BEGIN RSA PUBLIC KEY-----
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;RSAPublicKey
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----END RSA PUBLIC KEY-----&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;Commands&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Generate RSA private key&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl genrsa -out private.pem 2048
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Extract public key from RSA private key&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl rsa -in private.pem -out public.pem -RSAPublicKey_out
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&quot;rfc5958-former-pkcs-8-aka-p8&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc5958#section-5&quot;&gt;RFC5958&lt;/a&gt; (former PKCS #8, aka .p8)&lt;/h2&gt;
+
+&lt;p&gt;Defines the format for any private key. Two &lt;strong&gt;structures&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----BEGIN PRIVATE KEY-----
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;PrivateKeyInfo ::= OneAsymmetricKey
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----END PRIVATE KEY-----&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----BEGIN ENCRYPTED PRIVATE KEY-----
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;EncryptedPrivateKeyInfo
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----END ENCRYPTED PRIVATE KEY-----&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;The corresponding PEM formats are described in RFC7468 &lt;a href=&quot;https://tools.ietf.org/html/rfc7468#section-10&quot;&gt;Section 10&lt;/a&gt; and &lt;a href=&quot;https://tools.ietf.org/html/rfc7468#section-11&quot;&gt;Section 11&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Commands&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Convert PKCS #1 $\rightarrow$ PKCS #8&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl pkcs8 -in private-pkcs1.pem -topk8 -out private-pkcs8.pem -nocrypt
+openssl pkcs8 -in private-pkcs1.pem -topk8 -out private-pkcs8-enc.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Convert PKCS #8 $\rightarrow$ PKCS #1&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl rsa -in private-pkcs8.pem -out private-pkcs1.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rfc5280-pki-x509&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc5280#section-4.1.2.7&quot;&gt;RFC5280&lt;/a&gt; (PKI X.509)&lt;/h2&gt;
+
+&lt;p&gt;Among other things, defines the format for any public key&lt;/p&gt;
+
+&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----BEGIN PUBLIC KEY-----
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;SubjectPublicKeyInfo
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;-----END PUBLIC KEY-----&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
+
+&lt;p&gt;The PEM format is described in &lt;a href=&quot;https://tools.ietf.org/html/rfc7468#section-13&quot;&gt;RFC7468&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Commands&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Convert RSA public key between X.509 and PKCS #1 formats&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl rsa -pubin -in public.pem -RSAPublicKey_out
+openssl rsa -RSAPublicKey_in -in pkcs1-public.pem -pubout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Extract public key from RSA private key&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl rsa -in private.pem -out public.pem -pubout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Extract public key from X.509 CSR&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl req -in cert.csr -pubkey -noout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Extract public key from X.509 certificate&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -in cert.crt -inform pem -pubkey -noout
+openssl x509 -in cert.cer -inform der -pubkey -noout
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Convert X.509 certificate between DER and PEM formats&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -in cert.cer -inform der -out cert.crt -outform pem
+openssl x509 -in cert.crt -inform pem -out cert.cer -outform der
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Andrey Paramonov</name></author><category term="cryptography" /><category term="shell" /><summary type="html">RFC8017 (PKCS #1 v.2.2) Defines the traditional format for RSA keys. Two structures: -----BEGIN RSA PRIVATE KEY----- RSAPrivateKey -----END RSA PRIVATE KEY----- and -----BEGIN RSA PUBLIC KEY----- RSAPublicKey -----END RSA PUBLIC KEY----- Commands Generate RSA private key openssl genrsa -out private.pem 2048 Extract public key from RSA private key openssl rsa -in private.pem -out public.pem -RSAPublicKey_out</summary></entry><entry><title type="html">RSA Private Key</title><link href="http://localhost:4000/2017/04/11/rsa-private-key/" rel="alternate" type="text/html" title="RSA Private Key" /><published>2017-04-11T06:32:13-04:00</published><updated>2017-04-11T06:32:13-04:00</updated><id>http://localhost:4000/2017/04/11/rsa-private-key</id><content type="html" xml:base="http://localhost:4000/2017/04/11/rsa-private-key/">&lt;blockquote&gt;
   &lt;p&gt;“What I cannot create, I do not understand” — Richard Feynman&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -1035,7 +1227,7 @@ KnqNAoGBAImiFxEbWN1UzPsAxIc9tO9nFig66nfStG2F8djUfywOwhqjfrsmeBwZ
 7EPrlYP7RyBdg2ktfNypUotpwZ7vwQBiSjGQezOvuQCMRoXrircJuJDXxqa9UL1B
 7lo3P9MXAfUW/bMMaUJD+8sIUeI36jFwOivCqUXuW58S3NV08/vL
 -----END RSA PRIVATE KEY-----
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Andrey Paramonov</name></author><category term="cryptography" /><category term="erlang" /><category term="shell" /><summary type="html">“What I cannot create, I do not understand” — Richard Feynman As a fun exercise I wanted to know how to build an RSA private key file from scratch. It turned out that it was not complicated. In fact it was very educational to learn about the PKCS #1 and X.609 standards. By the end of this post you should be able to read DER files without the openssl command, too. From a mathematical perspective an RSA private key is just a pair of numbers satisfying a few conditions. The first step is to choose two prime numbers. If we want our key to be $k$-bit long then each prime should be $k/2$-bit long. Here are two primes 1024-bit long: p = 188658351657909995564241240465674883756750911978965594406091265432265641964092435440867010496656290185915042088848864982944624560228571535282140345941898374783486396513112284924130530433476612244870421527834092351771495657957917171265855063528745445693207773620468819387929613829761428627329588653924255089451 q = 314178598271171309643469864042809599136290738797354680579453738873053976803051841787567944451717551290169456210178094252448060684978774667964812128639960504040754248179131205124174037497556941333232996617690501240860884613659741212508891734662698093999296965839284246675187499601986034176733136066305345935229</summary></entry><entry><title type="html">Spring OAuth 2</title><link href="http://blog.ndpar.com/2016/12/24/spring-oauth2/" rel="alternate" type="text/html" title="Spring OAuth 2" /><published>2016-12-24T13:11:35-05:00</published><updated>2016-12-24T13:11:35-05:00</updated><id>http://blog.ndpar.com/2016/12/24/spring-oauth2</id><content type="html" xml:base="http://blog.ndpar.com/2016/12/24/spring-oauth2/">&lt;p&gt;This post is a quick analysis of the Spring implementation of OAuth 2.0 code
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Andrey Paramonov</name></author><category term="cryptography" /><category term="erlang" /><category term="shell" /><summary type="html">“What I cannot create, I do not understand” — Richard Feynman As a fun exercise I wanted to know how to build an RSA private key file from scratch. It turned out that it was not complicated. In fact it was very educational to learn about the PKCS #1 and X.609 standards. By the end of this post you should be able to read DER files without the openssl command, too. From a mathematical perspective an RSA private key is just a pair of numbers satisfying a few conditions. The first step is to choose two prime numbers. If we want our key to be $k$-bit long then each prime should be $k/2$-bit long. Here are two primes 1024-bit long: p = 188658351657909995564241240465674883756750911978965594406091265432265641964092435440867010496656290185915042088848864982944624560228571535282140345941898374783486396513112284924130530433476612244870421527834092351771495657957917171265855063528745445693207773620468819387929613829761428627329588653924255089451 q = 314178598271171309643469864042809599136290738797354680579453738873053976803051841787567944451717551290169456210178094252448060684978774667964812128639960504040754248179131205124174037497556941333232996617690501240860884613659741212508891734662698093999296965839284246675187499601986034176733136066305345935229</summary></entry><entry><title type="html">Spring OAuth 2</title><link href="http://localhost:4000/2016/12/24/spring-oauth2/" rel="alternate" type="text/html" title="Spring OAuth 2" /><published>2016-12-24T13:11:35-05:00</published><updated>2016-12-24T13:11:35-05:00</updated><id>http://localhost:4000/2016/12/24/spring-oauth2</id><content type="html" xml:base="http://localhost:4000/2016/12/24/spring-oauth2/">&lt;p&gt;This post is a quick analysis of the Spring implementation of OAuth 2.0 code
 flow (&lt;a href=&quot;https://tools.ietf.org/html/rfc6749#section-4.1&quot;&gt;RFC6749 Section 4.1&lt;/a&gt;) with the minumum application &lt;a href=&quot;https://github.com/ndpar/oauth-demo&quot;&gt;code&lt;/a&gt;.
 The setup consists of the &lt;a href=&quot;https://github.com/ndpar/oauth-demo/blob/master/server/src/main/java/com/ndpar/ServerApplication.java&quot;&gt;authorization server&lt;/a&gt;, the &lt;a href=&quot;https://github.com/ndpar/oauth-demo/blob/master/resource/src/main/java/com/ndpar/ResourceApplication.java&quot;&gt;resource server&lt;/a&gt;,
 and the &lt;a href=&quot;https://github.com/ndpar/oauth-demo/blob/master/client/src/main/java/com/ndpar/ClientApplication.java&quot;&gt;client&lt;/a&gt;.&lt;/p&gt;
@@ -1330,7 +1522,7 @@ User/Client metadata.&lt;/p&gt;
   &lt;li&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc7591&quot;&gt;&lt;strong&gt;RFC7591&lt;/strong&gt;&lt;/a&gt; OAuth 2.0 Dynamic Client Registration Protocol&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc7636&quot;&gt;&lt;strong&gt;RFC7636&lt;/strong&gt;&lt;/a&gt; PKCE by OAuth Public Clients&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc7662&quot;&gt;&lt;strong&gt;RFC7662&lt;/strong&gt;&lt;/a&gt; OAuth 2.0 Token Introspection&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="oauth" /><category term="spring" /><summary type="html">This post is a quick analysis of the Spring implementation of OAuth 2.0 code flow (RFC6749 Section 4.1) with the minumum application code. The setup consists of the authorization server, the resource server, and the client. The flow starts when a user hits localhost:9999/client/resource</summary></entry><entry><title type="html">Machine Learning: Logistic Regression</title><link href="http://blog.ndpar.com/2016/11/07/ml-logistic-regression/" rel="alternate" type="text/html" title="Machine Learning: Logistic Regression" /><published>2016-11-07T16:05:31-05:00</published><updated>2016-11-07T16:05:31-05:00</updated><id>http://blog.ndpar.com/2016/11/07/ml-logistic-regression</id><content type="html" xml:base="http://blog.ndpar.com/2016/11/07/ml-logistic-regression/">&lt;p&gt;&lt;em&gt;Logistic regression&lt;/em&gt; is a classification case of &lt;a href=&quot;/2016/10/28/ml-linear-regression&quot;&gt;linear regression&lt;/a&gt; whith
+&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="oauth" /><category term="spring" /><summary type="html">This post is a quick analysis of the Spring implementation of OAuth 2.0 code flow (RFC6749 Section 4.1) with the minumum application code. The setup consists of the authorization server, the resource server, and the client. The flow starts when a user hits localhost:9999/client/resource</summary></entry><entry><title type="html">Machine Learning: Logistic Regression</title><link href="http://localhost:4000/2016/11/07/ml-logistic-regression/" rel="alternate" type="text/html" title="Machine Learning: Logistic Regression" /><published>2016-11-07T16:05:31-05:00</published><updated>2016-11-07T16:05:31-05:00</updated><id>http://localhost:4000/2016/11/07/ml-logistic-regression</id><content type="html" xml:base="http://localhost:4000/2016/11/07/ml-logistic-regression/">&lt;p&gt;&lt;em&gt;Logistic regression&lt;/em&gt; is a classification case of &lt;a href=&quot;/2016/10/28/ml-linear-regression&quot;&gt;linear regression&lt;/a&gt; whith
 dependent variable $y$ taking binary values.&lt;/p&gt;
 
 &lt;p&gt;Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$,
@@ -1450,7 +1642,7 @@ use &lt;code class=&quot;highlighter-rouge&quot;&gt;accuracy.m&lt;/code&gt; scri
 &lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;figcaption class=&quot;code-highlight-caption&quot;&gt;&lt;span class=&quot;code-highlight-caption-title&quot;&gt;predict.m&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sigmoid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;</content><author><name>Andrey Paramonov</name></author><category term="machine learning" /><category term="math" /><category term="matlab" /><summary type="html">Logistic regression is a classification case of linear regression whith dependent variable $y$ taking binary values. Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$, $x \in \mathbb{R}^{n+1}$, $x^{(i)} _ 0 = 0$, $y^{(i)} \in $ {0,1}, find classification function</summary></entry><entry><title type="html">Machine Learning: Linear Regression</title><link href="http://blog.ndpar.com/2016/10/28/ml-linear-regression/" rel="alternate" type="text/html" title="Machine Learning: Linear Regression" /><published>2016-10-28T17:05:31-04:00</published><updated>2016-10-28T17:05:31-04:00</updated><id>http://blog.ndpar.com/2016/10/28/ml-linear-regression</id><content type="html" xml:base="http://blog.ndpar.com/2016/10/28/ml-linear-regression/">&lt;p&gt;Let $y$ be a dependent variable of a feature vector $x$&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;</content><author><name>Andrey Paramonov</name></author><category term="machine learning" /><category term="math" /><category term="matlab" /><summary type="html">Logistic regression is a classification case of linear regression whith dependent variable $y$ taking binary values. Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$, $x \in \mathbb{R}^{n+1}$, $x^{(i)} _ 0 = 0$, $y^{(i)} \in $ {0,1}, find classification function</summary></entry><entry><title type="html">Machine Learning: Linear Regression</title><link href="http://localhost:4000/2016/10/28/ml-linear-regression/" rel="alternate" type="text/html" title="Machine Learning: Linear Regression" /><published>2016-10-28T17:05:31-04:00</published><updated>2016-10-28T17:05:31-04:00</updated><id>http://localhost:4000/2016/10/28/ml-linear-regression</id><content type="html" xml:base="http://localhost:4000/2016/10/28/ml-linear-regression/">&lt;p&gt;Let $y$ be a dependent variable of a feature vector $x$&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;x =
 \begin{pmatrix}
@@ -1606,7 +1798,7 @@ E =
 
 &lt;p&gt;and normal equation&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\theta = \left( X^T X +\lambda E \right)^{-1} X^T y&lt;/script&gt;</content><author><name>Andrey Paramonov</name></author><category term="machine learning" /><category term="math" /><category term="matlab" /><summary type="html">Let $y$ be a dependent variable of a feature vector $x$ Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$, find the value of $y$ on any input vector $x$. We solve this problem by constructing a hypothesis funciton $h_\theta(x)$ using one of the methods below.</summary></entry><entry><title type="html">Another Notation as a Tool of Thought</title><link href="http://blog.ndpar.com/2015/04/03/feynman-tot/" rel="alternate" type="text/html" title="Another Notation as a Tool of Thought" /><published>2015-04-03T08:00:00-04:00</published><updated>2015-04-03T08:00:00-04:00</updated><id>http://blog.ndpar.com/2015/04/03/feynman-tot</id><content type="html" xml:base="http://blog.ndpar.com/2015/04/03/feynman-tot/">&lt;p&gt;In his seminal &lt;a href=&quot;http://www.jsoftware.com/papers/tot.htm&quot;&gt;paper&lt;/a&gt; Kenneth Iverson described a new mathematical notation which soon became A Programming Language.&lt;/p&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\theta = \left( X^T X +\lambda E \right)^{-1} X^T y&lt;/script&gt;</content><author><name>Andrey Paramonov</name></author><category term="machine learning" /><category term="math" /><category term="matlab" /><summary type="html">Let $y$ be a dependent variable of a feature vector $x$ Problem: Given a training set $\langle x^{(i)}, y^{(i)} \rangle$, $1 \le i \le m$, find the value of $y$ on any input vector $x$. We solve this problem by constructing a hypothesis funciton $h_\theta(x)$ using one of the methods below.</summary></entry><entry><title type="html">Another Notation as a Tool of Thought</title><link href="http://localhost:4000/2015/04/03/feynman-tot/" rel="alternate" type="text/html" title="Another Notation as a Tool of Thought" /><published>2015-04-03T08:00:00-04:00</published><updated>2015-04-03T08:00:00-04:00</updated><id>http://localhost:4000/2015/04/03/feynman-tot</id><content type="html" xml:base="http://localhost:4000/2015/04/03/feynman-tot/">&lt;p&gt;In his seminal &lt;a href=&quot;http://www.jsoftware.com/papers/tot.htm&quot;&gt;paper&lt;/a&gt; Kenneth Iverson described a new mathematical notation which soon became A Programming Language.&lt;/p&gt;
 
 &lt;p&gt;Recently, while reading &lt;em&gt;Surely You’re Joking, Mr. Feynman!&lt;/em&gt;, I found that Feynman invented his own notation when he was in school.&lt;/p&gt;
 
@@ -1626,7 +1818,7 @@ E =
 
 &lt;blockquote&gt;
   &lt;p&gt;I thought my symbols were just as good, if not better, than the regular symbols–it doesn’t make any difference &lt;em&gt;what&lt;/em&gt; symbols you use–but I discovered later that it &lt;em&gt;does&lt;/em&gt; make a difference. Once when I was explaining something to another kid in high school, without thinking I started to make these symbols, and he said, “What the hell are those?” I realized then that if I’m going to talk to anybody else, I’ll have to use the standard symbols, so I eventually gave up my own symbols.&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Andrey Paramonov</name></author><category term="feynman" /><category term="math" /><summary type="html">In his seminal paper Kenneth Iverson described a new mathematical notation which soon became A Programming Language. Recently, while reading Surely You’re Joking, Mr. Feynman!, I found that Feynman invented his own notation when he was in school.</summary></entry><entry><title type="html">Two series</title><link href="http://blog.ndpar.com/2014/11/29/two-series/" rel="alternate" type="text/html" title="Two series" /><published>2014-11-29T07:00:00-05:00</published><updated>2014-11-29T07:00:00-05:00</updated><id>http://blog.ndpar.com/2014/11/29/two-series</id><content type="html" xml:base="http://blog.ndpar.com/2014/11/29/two-series/">&lt;p&gt;Cliff Pickover &lt;a href=&quot;https://twitter.com/pickover/status/538754166261555201&quot;&gt;twitted&lt;/a&gt; a fun puzzle: Which series is bigger?&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Andrey Paramonov</name></author><category term="feynman" /><category term="math" /><summary type="html">In his seminal paper Kenneth Iverson described a new mathematical notation which soon became A Programming Language. Recently, while reading Surely You’re Joking, Mr. Feynman!, I found that Feynman invented his own notation when he was in school.</summary></entry><entry><title type="html">Two series</title><link href="http://localhost:4000/2014/11/29/two-series/" rel="alternate" type="text/html" title="Two series" /><published>2014-11-29T07:00:00-05:00</published><updated>2014-11-29T07:00:00-05:00</updated><id>http://localhost:4000/2014/11/29/two-series</id><content type="html" xml:base="http://localhost:4000/2014/11/29/two-series/">&lt;p&gt;Cliff Pickover &lt;a href=&quot;https://twitter.com/pickover/status/538754166261555201&quot;&gt;twitted&lt;/a&gt; a fun puzzle: Which series is bigger?&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\sum_{n=0}^\infty \frac{1}{2^{n+1}} \quad \text{or} \quad \sum_{n=0}^\infty \frac{n}{2^{n+1}}&lt;/script&gt;
 
@@ -1648,7 +1840,7 @@ S &amp; = \sum_{n=0}^\infty \frac{n}{2^{n+1}} = \sum_{n=0}^\infty \left(\frac{1}
   &amp; = \frac{1}{2} + \frac{1}{2}S \implies S = 1
 \end{align*} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;Both series are equal.&lt;/p&gt;</content><author><name>Andrey Paramonov</name></author><category term="math" /><summary type="html">Cliff Pickover twitted a fun puzzle: Which series is bigger? The first one is the famous geometric series which sum is equal to 1. The second one seems to be bigger because 1 &amp;lt; n, except for the 0th term, but that 0th term makes a big difference.</summary></entry><entry><title type="html">GC visualization</title><link href="http://blog.ndpar.com/2014/10/13/gc-visualization/" rel="alternate" type="text/html" title="GC visualization" /><published>2014-10-13T08:00:00-04:00</published><updated>2014-10-13T08:00:00-04:00</updated><id>http://blog.ndpar.com/2014/10/13/gc-visualization</id><content type="html" xml:base="http://blog.ndpar.com/2014/10/13/gc-visualization/">&lt;p&gt;While I was working through the chapter 5.3 of &lt;a href=&quot;http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-33.html#%_sec_5.3.2&quot;&gt;SICP&lt;/a&gt;, I created small visualization of the &lt;em&gt;stop-and-copy&lt;/em&gt; garbage collection algorithm.&lt;/p&gt;
+&lt;p&gt;Both series are equal.&lt;/p&gt;</content><author><name>Andrey Paramonov</name></author><category term="math" /><summary type="html">Cliff Pickover twitted a fun puzzle: Which series is bigger? The first one is the famous geometric series which sum is equal to 1. The second one seems to be bigger because 1 &amp;lt; n, except for the 0th term, but that 0th term makes a big difference.</summary></entry><entry><title type="html">GC visualization</title><link href="http://localhost:4000/2014/10/13/gc-visualization/" rel="alternate" type="text/html" title="GC visualization" /><published>2014-10-13T08:00:00-04:00</published><updated>2014-10-13T08:00:00-04:00</updated><id>http://localhost:4000/2014/10/13/gc-visualization</id><content type="html" xml:base="http://localhost:4000/2014/10/13/gc-visualization/">&lt;p&gt;While I was working through the chapter 5.3 of &lt;a href=&quot;http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-33.html#%_sec_5.3.2&quot;&gt;SICP&lt;/a&gt;, I created small visualization of the &lt;em&gt;stop-and-copy&lt;/em&gt; garbage collection algorithm.&lt;/p&gt;
 
 &lt;p&gt;I start with the following memory structure example.&lt;/p&gt;
 
@@ -1673,130 +1865,4 @@ S &amp; = \sum_{n=0}^\infty \frac{n}{2^{n+1}} = \sum_{n=0}^\infty \left(\frac{1}
 &lt;ul&gt;
   &lt;li&gt;Bigger picture on &lt;a href=&quot;https://raw.githubusercontent.com/CompSciCabal/SMRTYPRTY/master/experiments/ndpar/sicp-5.3-gc/gc.gif&quot;&gt;GitHub&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;Animation frames for better view on &lt;a href=&quot;https://github.com/CompSciCabal/SMRTYPRTY/tree/master/experiments/ndpar/sicp-5.3-gc&quot;&gt;GitHub&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="sicp" /><category term="lisp" /><summary type="html">While I was working through the chapter 5.3 of SICP, I created small visualization of the stop-and-copy garbage collection algorithm. I start with the following memory structure example. The content of the root register is a pointer p4 to the list of registers (x y z). The register x points to address 6 where improper list (1 . 2) saved. The register y points to address 8 where list (x x) starts. Finally, the register z points to address 10 where list (3 4 5) starts. Addresses 1, 3, 5, 9, 11, 13, 15 contain garbage. After we ran the GC algorithm, we got the following memory structure. root now points to address 0, x to 1, y to 3, and z to 6.</summary></entry><entry><title type="html">Fast Fourier transform in J</title><link href="http://blog.ndpar.com/2014/10/12/fft-j/" rel="alternate" type="text/html" title="Fast Fourier transform in J" /><published>2014-10-12T08:00:00-04:00</published><updated>2014-10-12T08:00:00-04:00</updated><id>http://blog.ndpar.com/2014/10/12/fft-j</id><content type="html" xml:base="http://blog.ndpar.com/2014/10/12/fft-j/">&lt;p&gt;In the previous &lt;a href=&quot;/2014/10/11/dft-j/&quot;&gt;post&lt;/a&gt; we discussed the discrete Fourier transform (DFT). Its J implementation was pretty straightforward, and the program looked almost identical to its mathematical definition. In this post, I want to explore how to implement fast Fourier transform (FFT), a recursively defined version of DFT that reduces algorithmic complexity from $O(n^2)$ to $O(N\log{N})$.&lt;/p&gt;
-
-&lt;h2 id=&quot;math&quot;&gt;Math&lt;/h2&gt;
-
-&lt;p&gt;Recall the DFT formula from the previous post&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{F}_N\mathbf{f}[m] = \sum_{n=0}^{N-1} \mathbf{f}[n] e^{-2\pi i mn/N}, \quad m = 0, \dots , N-1&lt;/script&gt;
-
-&lt;p&gt;I use a slightly different notation here to make recursive definition easier to understand.&lt;/p&gt;
-
-&lt;p&gt;We assume that &lt;em&gt;N&lt;/em&gt; is a power of 2. Using basic arithmetic and properties of complex exponentials, we can derive the formula for the DFT of order &lt;em&gt;2N&lt;/em&gt; in terms of two DFTs of order &lt;em&gt;N&lt;/em&gt;&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{F}_{2N}\mathbf{f}[m]=\mathcal{F}_N\mathbf{f}_{even}+e^{-\pi im/N}\mathcal{F}_N\mathbf{f}_{odd}&lt;/script&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{F}_{2N}\mathbf{f}[m+N]=\mathcal{F}_N\mathbf{f}_{even}-e^{-\pi im/N}\mathcal{F}_N\mathbf{f}_{odd}&lt;/script&gt;
-
-&lt;p&gt;where $m=0,\dots,N-1$. The base case, when $N=1$, is&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{F}_1\mathbf{f}[0] = \mathbf{f}[0]&lt;/script&gt;
-
-&lt;p&gt;i.e. the identity function.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h2 id=&quot;programming&quot;&gt;Programming&lt;/h2&gt;
-
-&lt;p&gt;Let’s express the FFT algorithm in words. If $N=1$ then the &lt;code class=&quot;highlighter-rouge&quot;&gt;fft&lt;/code&gt; function is just the identity function (&lt;code class=&quot;highlighter-rouge&quot;&gt;]&lt;/code&gt; in J). Overwise, it’s a function involving a recursive call on an input vector of half the length. Here is the same phrase written in J&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;fft=: something_recursive_here ` ] @. (1 = #)&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;If $N&amp;gt;1$, we split the input vector into two vectors by even and odd indices. We apply FFT recursively to each of these vectors. We multiply the first output vector by 1 and the second one by $e^{-\pi im/N}$. Then, we find the sum and difference of the result vectors, and concatenate them. That should be it.&lt;/p&gt;
-
-&lt;p&gt;Let’s start with the split function. To split a vector by even and odd indices in J, we can split it by groups of two elements, stack the groups on top of each other making an $N\times2$ matrix, then transpose it to get $2\times N$ matrix, which gives us the two vectors we need. Here is the implementation of the split function&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;spl=: |:@(_2 ]\ ])&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;and here is an example of applying this function to a range vector&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   spl 0 1 2 3 4 5 6 7
-0 2 4 6
-1 3 5 7
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The next step is the function $e^{-\pi im/N}$. We implement it in two steps: first, scalar $\omega=e^{\pi i/N}$, then vector $\boldsymbol\omega=\omega^{-m}$. The implementation is analogous to the one from the previous &lt;a href=&quot;/2014/10/11/dft-j/&quot;&gt;post&lt;/a&gt;, with the difference of $\pi i/N$ instead of $2\pi i/N$, and vector $\boldsymbol\omega$ instead of matrix $\Omega$&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;omg=: ^@o.@(0j1&amp;amp;%)
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;omv=: omg ^ -@i.&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;The new matrix $\Omega$ is build by stacking a unit vector $[1,\dots,1]$ of length &lt;em&gt;N&lt;/em&gt; on top of the vector $\boldsymbol\omega$&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;Omg=: 1 ,: omv&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;Here is an example of its application to $N=4$&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   Omg 4
-1                  1              1                   1
-1 0.707107j_0.707107 2.22045e_16j_1 _0.707107j_0.707107
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we can go back to the &lt;code class=&quot;highlighter-rouge&quot;&gt;fft&lt;/code&gt; function and add some code to the &lt;code class=&quot;highlighter-rouge&quot;&gt;something_recursive_here&lt;/code&gt; placeholder&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;fft=: final_piece_here@(Omg@#@&amp;#x7b;. * $:&quot;1)@spl ` ] @. (1 = #)&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$:&quot;1&lt;/code&gt; means the &lt;code class=&quot;highlighter-rouge&quot;&gt;fft&lt;/code&gt; function is recursively applied to every row of its input matrix (which is the result of the &lt;code class=&quot;highlighter-rouge&quot;&gt;spl&lt;/code&gt; function above). &lt;code class=&quot;highlighter-rouge&quot;&gt;Omg@#@{.&lt;/code&gt; means: take the first row of the input matrix, get the length of it, and pass it to the &lt;code class=&quot;highlighter-rouge&quot;&gt;Omg&lt;/code&gt; function.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;final_piece_here&lt;/code&gt; is then what we described above as “find the sum and difference of the result vectors, and concatenate them”. In J it’s implemented as the fork &lt;code class=&quot;highlighter-rouge&quot;&gt;+/ , -/&lt;/code&gt;. Now we have all the pieces in place, and the final program is&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;spl=: |:@(_2 ]\ ])
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;omg=: ^@o.@(0j1&amp;amp;%)
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;omv=: omg ^ -@i.
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;4&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;Omg=: 1 ,: omv
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;5&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;fft=: (+/ , -/)@(Omg@#@&amp;#x7b;. * $:&quot;1)@spl ` ] @. (1 = #)&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Source code with examples on &lt;a href=&quot;https://github.com/ndpar/j/blob/master/fourier.ijs&quot;&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Official FFT add-on on &lt;a href=&quot;http://www.jsoftware.com/jwiki/Addons/math/fftw&quot;&gt;jsoftware&lt;/a&gt; wiki.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="j" /><category term="math" /><summary type="html">In the previous post we discussed the discrete Fourier transform (DFT). Its J implementation was pretty straightforward, and the program looked almost identical to its mathematical definition. In this post, I want to explore how to implement fast Fourier transform (FFT), a recursively defined version of DFT that reduces algorithmic complexity from $O(n^2)$ to $O(N\log{N})$. Math Recall the DFT formula from the previous post I use a slightly different notation here to make recursive definition easier to understand. We assume that N is a power of 2. Using basic arithmetic and properties of complex exponentials, we can derive the formula for the DFT of order 2N in terms of two DFTs of order N where $m=0,\dots,N-1$. The base case, when $N=1$, is i.e. the identity function.</summary></entry><entry><title type="html">Discrete Fourier transform in J</title><link href="http://blog.ndpar.com/2014/10/11/dft-j/" rel="alternate" type="text/html" title="Discrete Fourier transform in J" /><published>2014-10-11T08:00:00-04:00</published><updated>2014-10-11T08:00:00-04:00</updated><id>http://blog.ndpar.com/2014/10/11/dft-j</id><content type="html" xml:base="http://blog.ndpar.com/2014/10/11/dft-j/">&lt;p&gt;The Fourier analysis in general and the Fourier transform in particular has always been one of my favourite topics in mathematics. When I started learning the &lt;a href=&quot;http://www.jsoftware.com&quot;&gt;J programming language&lt;/a&gt; I thought that implementing the discrete Fourier transform (DFT) in J must be really elegant. One rainy weekend I finally found time to do that, and this post is a result of my experiments.&lt;/p&gt;
-
-&lt;h2 id=&quot;math&quot;&gt;Math&lt;/h2&gt;
-
-&lt;p&gt;The definition of one-dimensional DFT is pretty simple. It is just a function that maps a given vector &lt;strong&gt;f&lt;/strong&gt; of length &lt;em&gt;N&lt;/em&gt; to a vector &lt;strong&gt;F&lt;/strong&gt; of the same length by the following formula&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbf{F}[m] = \sum_{n=0}^{N-1} \mathbf{f}[n] e^{-2\pi i mn/N}, \quad m = 0, \dots , N-1&lt;/script&gt;
-
-&lt;p&gt;To implement this formula the only thing we need is basic arithmetic for complex numbers. Not only does J provide such an arithmetic, it has special code for complex exponentiation, which makes the implementation much easier than it would be in other languages.&lt;/p&gt;
-
-&lt;p&gt;Before we start coding let’s rewrite the formula in terms of matrix multiplication so that we can utilize this feature of J. Let $\omega$ be the primitive &lt;em&gt;N&lt;/em&gt;th root of unity $\omega = e^{2\pi i/N}$, then the DFT formula becomes&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbf{F} = \mathbf{f} \cdot \Omega&lt;/script&gt;
-
-&lt;p&gt;where &lt;strong&gt;f&lt;/strong&gt; is an input vector and $\Omega$ is a symmetric matrix $(\omega^{-mn})$ with $m,n=0,\dots,N-1$.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h2 id=&quot;programming&quot;&gt;Programming&lt;/h2&gt;
-
-&lt;p&gt;We are now ready to code. Let’s start with $\omega = e^{2\pi i/N}$. As I said before J has special code for function $e^{\pi x}$, namely the composition &lt;code class=&quot;highlighter-rouge&quot;&gt;^@o.@&lt;/code&gt;. In our case $x$ is equal to $2i/N$, where $N$ is an input to the function $\omega$. In other words, $x$ is a function that divides $2i$ by its input, which in J is written as &lt;code class=&quot;highlighter-rouge&quot;&gt;0j2&amp;amp;%&lt;/code&gt;. That means the complete little omega implementation is&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;omg=: ^@o.@(0j2&amp;amp;%)&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;The next step is the matrix $\Omega=(\omega^{-mn})$. We can think of it this way: make a multiplication table of vectors $[0,\dots,N-1]$ and $-[0,\dots,N-1]$, then raise $\omega$ to the power of every element from that table. In J the multiplication table of a vector by its negative is implemented as the hook &lt;code class=&quot;highlighter-rouge&quot;&gt;*/ -&lt;/code&gt;. For building a range-vector $[0,\dots,N-1]$ we can use the function &lt;code class=&quot;highlighter-rouge&quot;&gt;i.&lt;/code&gt;. Therefore, the implementation of a square matrix $(-mn)$ in J is the composition &lt;code class=&quot;highlighter-rouge&quot;&gt;(*/ -)@i.&lt;/code&gt;, and the function of $\Omega$ is&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;Omg=: omg ^ (*/ -)@i.&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;The last piece of the DFT program is the formula $\mathbf{f}\cdot\Omega$. Our &lt;code class=&quot;highlighter-rouge&quot;&gt;Omg&lt;/code&gt; function accepts as a parameter the length of the input vector, while the &lt;code class=&quot;highlighter-rouge&quot;&gt;dft&lt;/code&gt; function does the vector itself. That means we need to compose &lt;code class=&quot;highlighter-rouge&quot;&gt;Omg&lt;/code&gt; function with the length function &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;. Then the composition &lt;code class=&quot;highlighter-rouge&quot;&gt;Omg@#&lt;/code&gt; will work on vectors.&lt;/p&gt;
-
-&lt;p&gt;The matrix (and vector) multiplication function in J is &lt;code class=&quot;highlighter-rouge&quot;&gt;+/ .*&lt;/code&gt;. Therefore, the product of the input vector and the function &lt;code class=&quot;highlighter-rouge&quot;&gt;Omg@#&lt;/code&gt; is just a hook&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;dft=: +/ .* Omg@#&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;That’s it. This is a complete implementation of DFT in J. Let’s put all three lines together.&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;omg=: ^@o.@(0j2&amp;amp;%)
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;2&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;Omg=: omg ^ (*/ -)@i.
-&lt;/div&gt;&lt;/div&gt;&lt;div data-line=&quot;3&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;dft=: +/ .* Omg@#&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;p&gt;The whole program fits in one tweet. If you like one-liners, you can do this as well&lt;/p&gt;
-
-&lt;figure class=&quot;code-highlight-figure&quot;&gt;&lt;div class=&quot;code-highlight&quot;&gt;&lt;pre class=&quot;code-highlight-pre&quot;&gt;&lt;div data-line=&quot;1&quot; class=&quot;code-highlight-row numbered&quot;&gt;&lt;div class=&quot;code-highlight-line&quot;&gt;dft=: +/ .* ^@o.@(0j2&amp;amp;% * (*/ -)@i.)@#&lt;/div&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Source code with examples on &lt;a href=&quot;https://github.com/ndpar/j/blob/master/fourier.ijs&quot;&gt;GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="j" /><category term="math" /><summary type="html">The Fourier analysis in general and the Fourier transform in particular has always been one of my favourite topics in mathematics. When I started learning the J programming language I thought that implementing the discrete Fourier transform (DFT) in J must be really elegant. One rainy weekend I finally found time to do that, and this post is a result of my experiments. Math The definition of one-dimensional DFT is pretty simple. It is just a function that maps a given vector f of length N to a vector F of the same length by the following formula To implement this formula the only thing we need is basic arithmetic for complex numbers. Not only does J provide such an arithmetic, it has special code for complex exponentiation, which makes the implementation much easier than it would be in other languages. Before we start coding let’s rewrite the formula in terms of matrix multiplication so that we can utilize this feature of J. Let $\omega$ be the primitive Nth root of unity $\omega = e^{2\pi i/N}$, then the DFT formula becomes where f is an input vector and $\Omega$ is a symmetric matrix $(\omega^{-mn})$ with $m,n=0,\dots,N-1$.</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="sicp" /><category term="lisp" /><summary type="html">While I was working through the chapter 5.3 of SICP, I created small visualization of the stop-and-copy garbage collection algorithm. I start with the following memory structure example. The content of the root register is a pointer p4 to the list of registers (x y z). The register x points to address 6 where improper list (1 . 2) saved. The register y points to address 8 where list (x x) starts. Finally, the register z points to address 10 where list (3 4 5) starts. Addresses 1, 3, 5, 9, 11, 13, 15 contain garbage. After we ran the GC algorithm, we got the following memory structure. root now points to address 0, x to 1, y to 3, and z to 6.</summary></entry></feed>

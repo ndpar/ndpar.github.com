@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cryptography Tools - Side Notes</title>
+
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="">
+  <link rel="alternate" type="application/rss+xml" title="Side Notes" href="">
+
+  <link href='/stylesheets/all-3946f92fb0c0a9c01c341f255decb03c.css' media='all' rel='stylesheet' type='text/css'>
+
+  <!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+    src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">Side Notes</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+          
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Cryptography Tools</h1>
+    <p class="post-meta">
+      <time datetime="2017-04-24T14:42:14-04:00" itemprop="datePublished">
+        
+        Apr 24, 2017
+      </time>
+      
+      
+        • <span>Categories: Cryptography</span>
+      
+      
+        • <span>Tags: cryptography, shell</span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <h2 id="randomness">Randomness</h2>
+
+<p>Generate 33 random bytes (wrapped in 44 characters)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -base64 33 -out pass.txt
+</code></pre></div></div>
+
+<p>Output random bytes in hex format</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand -hex 33
+</code></pre></div></div>
+
+<h2 id="certificate-authority">Certificate Authority</h2>
+
+<p>Create a CA certificate (refer to <a href="https://gist.github.com/ndpar/867893f78f8e36a7cbcf279f0d2a60ad#file-openssl-ca-cnf">openssl-ca.cnf</a> file)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -days 3000 -out cacert.pem -keyout cakey.pem -passout file:pass.txt
+</code></pre></div></div>
+
+<!-- more -->
+
+<p>Inspect the certificate</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl x509 -in cacert.pem -noout -text
+openssl x509 -in cacert.pem -noout -purpose
+</code></pre></div></div>
+
+<p>Create a new (RSA) private key and a corresponding CSR (refer to <a href="https://gist.github.com/ndpar/867893f78f8e36a7cbcf279f0d2a60ad#file-openssl-server-cnf">openssl-server.cnf</a> file)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req -config openssl-server.cnf -newkey rsa:2048 -sha256 -out servercert.csr -keyout serverkey.pem -nodes
+</code></pre></div></div>
+
+<p>Create a CSR for an existing private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl req -new -config openssl-server.cnf -key serverkey.pem -sha256 -out servercert.csr -nodes
+openssl req -verify -in servercert.csr -text -noout
+</code></pre></div></div>
+
+<p>Initiate the database for signing certs</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch index.txt
+echo '01' &gt; serial.txt
+mkdir newcerts
+</code></pre></div></div>
+
+<p>Sign the CSR by the CA certificate</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out servercert.pem -passin file:pass.txt -infiles servercert.csr
+</code></pre></div></div>
+
+<h2 id="rfc7292-pkcs-12"><a href="https://tools.ietf.org/html/rfc7292">RFC7292</a> (PKCS #12)</h2>
+
+<p>Package a private key with a certificate into PKCS12 keystore</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs12 -export -in servercert.pem -inkey serverkey.pem -out keystore.p12 -name server -CAfile cacert.pem -caname root -chain
+</code></pre></div></div>
+
+<p>Generate a (symmetric AES) secret key and package it into the keystore</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -genseckey -alias symkey -keyalg AES -keysize 256 -storetype PKCS12 -keystore symkeystore.p12
+</code></pre></div></div>
+
+<p>Merge multiple keystores</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -importkeystore -srckeystore keystore2.p12 -srcstoretype PKCS12 -destkeystore keystore.p12 -deststoretype PKCS12
+</code></pre></div></div>
+
+<p>Import a certificate into the keystore</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -importcert -file cert.cer -keystore keystore.p12 -alias name
+</code></pre></div></div>
+
+<h2 id="rfc2315-pkcs-7-and-rfc5652-cms"><a href="https://tools.ietf.org/html/rfc2315">RFC2315</a> (PKCS #7) and <a href="https://tools.ietf.org/html/rfc5652">RFC5652</a> (CMS)</h2>
+
+<p>Encrypt the file for the recipient in CMS format</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl cms -encrypt -recip servercert.pem -binary -in file -outform der -out file.p7
+openssl cms -encrypt -recip servercert.pem -binary -in file -outform pem -out file.pem
+</code></pre></div></div>
+
+<p>Encrypt the file for the recipient in PKCS7 format</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl smime -encrypt -binary -in file -outform pem -out file.pem servercert.pem
+</code></pre></div></div>
+
+<p>Decrypt the CMS message with the private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl cms -decrypt -inkey serverkey.pem -in file.p7  -inform der -out file
+openssl cms -decrypt -inkey serverkey.pem -in file.pem -inform pem -out file
+</code></pre></div></div>
+
+<h2 id="links">Links</h2>
+
+<ul>
+  <li><a href="https://www.sslshopper.com/article-most-common-openssl-commands.html">The most common OpenSSL commands</a></li>
+  <li><a href="https://stackoverflow.com/questions/21297139/how-do-you-sign-a-certificate-signing-request-with-your-certification-authority">OpenSSL config files</a></li>
+  <li><a href="https://blog.ndpar.com/2017/04/17/p1-p8/">PKCS #1 and PKCS #8 commands</a></li>
+</ul>
+
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-credit">
+
+      <span class="footer-credit-left">
+        Copyright &copy; 2009–2018 Andrey Paramonov
+      </span>
+
+      <span class="footer-credit-right">
+        Powered by <a href="https://github.com/octopress/octopress">Octopress</a> •
+        Hosted by <a href="https://github.com">GitHub</a>
+      </span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>
