@@ -125,7 +125,7 @@
         • <span>Categories: Cryptography</span>
       
       
-        • <span>Tags: cryptography, shell</span>
+        • <span>Tags: cryptography, java, shell</span>
       </p>
   </header>
 
@@ -182,7 +182,12 @@ mkdir newcerts
 
 <h2 id="rfc7292-pkcs-12"><a href="https://tools.ietf.org/html/rfc7292">RFC7292</a> (PKCS #12)</h2>
 
-<p>Package a private key with a certificate into PKCS12 keystore</p>
+<p>Package a PKCS8 private key into PKCS12 keystore</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs12 -export -in private.pem -out private.p12 -name mykey -nocerts
+</code></pre></div></div>
+
+<p>Package a private key with a certificate chain into PKCS12 keystore</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs12 -export -in servercert.pem -inkey serverkey.pem -out keystore.p12 -name server -CAfile cacert.pem -caname root -chain
 </code></pre></div></div>
@@ -192,14 +197,30 @@ mkdir newcerts
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -genseckey -alias symkey -keyalg AES -keysize 256 -storetype PKCS12 -keystore symkeystore.p12
 </code></pre></div></div>
 
-<p>Merge multiple keystores</p>
+<p>Import a secret (password) into the existing keystore</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -importpass -alias mypass -keystore keystore.p12
+</code></pre></div></div>
+
+<p>Import a (trusted) certificate into the keystore</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -importcert -file cert.cer -keystore keystore.p12 -alias name
+</code></pre></div></div>
+
+<p>Merge multiple PKCS12 keystores</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -importkeystore -srckeystore keystore2.p12 -srcstoretype PKCS12 -destkeystore keystore.p12 -deststoretype PKCS12
 </code></pre></div></div>
 
-<p>Import a certificate into the keystore</p>
+<p>List the keystore content</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -importcert -file cert.cer -keystore keystore.p12 -alias name
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -list -keystore keystore.p12
+</code></pre></div></div>
+
+<p>Print keys and certificates from the keystore (<code class="highlighter-rouge">openssl</code> does not support secrets)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs12 -in keystore.p12
+openssl pkcs12 -in keystore.p12 -out keystore.pem
 </code></pre></div></div>
 
 <h2 id="rfc2315-pkcs-7-and-rfc5652-cms"><a href="https://tools.ietf.org/html/rfc2315">RFC2315</a> (PKCS #7) and <a href="https://tools.ietf.org/html/rfc5652">RFC5652</a> (CMS)</h2>

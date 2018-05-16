@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-06T16:40:59-04:00</updated><id>http://localhost:4000/</id><title type="html">Side Notes</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Andrey Paramonov</name></author><entry><title type="html">Cryptography Engineering</title><link href="http://localhost:4000/2017/12/02/cryptography-engineering/" rel="alternate" type="text/html" title="Cryptography Engineering" /><published>2017-12-02T11:05:33-05:00</published><updated>2017-12-02T11:05:33-05:00</updated><id>http://localhost:4000/2017/12/02/cryptography-engineering</id><content type="html" xml:base="http://localhost:4000/2017/12/02/cryptography-engineering/">&lt;p&gt;&lt;img class=&quot;left&quot; src=&quot;https://www.schneier.com/books/cryptography_engineering/book-ce-200w.jpg&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-16T09:24:08-04:00</updated><id>http://localhost:4000/</id><title type="html">Side Notes</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><author><name>Andrey Paramonov</name></author><entry><title type="html">Cryptography Engineering</title><link href="http://localhost:4000/2017/12/02/cryptography-engineering/" rel="alternate" type="text/html" title="Cryptography Engineering" /><published>2017-12-02T11:05:33-05:00</published><updated>2017-12-02T11:05:33-05:00</updated><id>http://localhost:4000/2017/12/02/cryptography-engineering</id><content type="html" xml:base="http://localhost:4000/2017/12/02/cryptography-engineering/">&lt;p&gt;&lt;img class=&quot;left&quot; src=&quot;https://www.schneier.com/books/cryptography_engineering/book-ce-200w.jpg&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;These are my notes on the book &lt;a href=&quot;https://www.schneier.com/books/cryptography_engineering/&quot;&gt;Cryptography Engineering&lt;/a&gt; by&lt;br /&gt;
 Niels Ferguson, Bruce Schneier, Tadayoshi Kohno&lt;br /&gt;
@@ -902,7 +902,12 @@ mkdir newcerts
 
 &lt;h2 id=&quot;rfc7292-pkcs-12&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc7292&quot;&gt;RFC7292&lt;/a&gt; (PKCS #12)&lt;/h2&gt;
 
-&lt;p&gt;Package a private key with a certificate into PKCS12 keystore&lt;/p&gt;
+&lt;p&gt;Package a PKCS8 private key into PKCS12 keystore&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl pkcs12 -export -in private.pem -out private.p12 -name mykey -nocerts
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Package a private key with a certificate chain into PKCS12 keystore&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl pkcs12 -export -in servercert.pem -inkey serverkey.pem -out keystore.p12 -name server -CAfile cacert.pem -caname root -chain
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -912,14 +917,30 @@ mkdir newcerts
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -genseckey -alias symkey -keyalg AES -keysize 256 -storetype PKCS12 -keystore symkeystore.p12
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Merge multiple keystores&lt;/p&gt;
+&lt;p&gt;Import a secret (password) into the existing keystore&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -importpass -alias mypass -keystore keystore.p12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Import a (trusted) certificate into the keystore&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -importcert -file cert.cer -keystore keystore.p12 -alias name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Merge multiple PKCS12 keystores&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -importkeystore -srckeystore keystore2.p12 -srcstoretype PKCS12 -destkeystore keystore.p12 -deststoretype PKCS12
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Import a certificate into the keystore&lt;/p&gt;
+&lt;p&gt;List the keystore content&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -importcert -file cert.cer -keystore keystore.p12 -alias name
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool -list -keystore keystore.p12
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Print keys and certificates from the keystore (&lt;code class=&quot;highlighter-rouge&quot;&gt;openssl&lt;/code&gt; does not support secrets)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl pkcs12 -in keystore.p12
+openssl pkcs12 -in keystore.p12 -out keystore.pem
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;rfc2315-pkcs-7-and-rfc5652-cms&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc2315&quot;&gt;RFC2315&lt;/a&gt; (PKCS #7) and &lt;a href=&quot;https://tools.ietf.org/html/rfc5652&quot;&gt;RFC5652&lt;/a&gt; (CMS)&lt;/h2&gt;
@@ -947,7 +968,7 @@ openssl cms -decrypt -inkey serverkey.pem -in file.pem -inform pem -out file
   &lt;li&gt;&lt;a href=&quot;https://www.sslshopper.com/article-most-common-openssl-commands.html&quot;&gt;The most common OpenSSL commands&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/21297139/how-do-you-sign-a-certificate-signing-request-with-your-certification-authority&quot;&gt;OpenSSL config files&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://blog.ndpar.com/2017/04/17/p1-p8/&quot;&gt;PKCS #1 and PKCS #8 commands&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="cryptography" /><category term="shell" /><summary type="html">Randomness Generate 33 random bytes (wrapped in 44 characters) openssl rand -base64 33 -out pass.txt Output random bytes in hex format openssl rand -hex 33 Certificate Authority Create a CA certificate (refer to openssl-ca.cnf file) openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -days 3000 -out cacert.pem -keyout cakey.pem -passout file:pass.txt</summary></entry><entry><title type="html">PKCS #1, PKCS #8, X.509</title><link href="http://localhost:4000/2017/04/17/p1-p8/" rel="alternate" type="text/html" title="PKCS #1, PKCS #8, X.509" /><published>2017-04-17T15:49:12-04:00</published><updated>2017-04-17T15:49:12-04:00</updated><id>http://localhost:4000/2017/04/17/p1-p8</id><content type="html" xml:base="http://localhost:4000/2017/04/17/p1-p8/">&lt;h2 id=&quot;rfc8017-pkcs-1-v22&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc8017#appendix-A.1&quot;&gt;RFC8017&lt;/a&gt; (PKCS #1 v.2.2)&lt;/h2&gt;
+&lt;/ul&gt;</content><author><name>Andrey Paramonov</name></author><category term="cryptography" /><category term="java" /><category term="shell" /><summary type="html">Randomness Generate 33 random bytes (wrapped in 44 characters) openssl rand -base64 33 -out pass.txt Output random bytes in hex format openssl rand -hex 33 Certificate Authority Create a CA certificate (refer to openssl-ca.cnf file) openssl req -x509 -config openssl-ca.cnf -newkey rsa:4096 -sha256 -days 3000 -out cacert.pem -keyout cakey.pem -passout file:pass.txt</summary></entry><entry><title type="html">PKCS #1, PKCS #8, X.509</title><link href="http://localhost:4000/2017/04/17/p1-p8/" rel="alternate" type="text/html" title="PKCS #1, PKCS #8, X.509" /><published>2017-04-17T15:49:12-04:00</published><updated>2017-04-17T15:49:12-04:00</updated><id>http://localhost:4000/2017/04/17/p1-p8</id><content type="html" xml:base="http://localhost:4000/2017/04/17/p1-p8/">&lt;h2 id=&quot;rfc8017-pkcs-1-v22&quot;&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc8017#appendix-A.1&quot;&gt;RFC8017&lt;/a&gt; (PKCS #1 v.2.2)&lt;/h2&gt;
 
 &lt;p&gt;Defines the traditional format for RSA keys. Two &lt;strong&gt;structures&lt;/strong&gt;:&lt;/p&gt;
 
