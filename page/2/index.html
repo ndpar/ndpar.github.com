@@ -125,6 +125,33 @@
     
       <li>
         
+        <span class="post-meta">Dec 24, 2016</span>
+
+        <h2>
+          <a class="post-link" href="/2016/12/24/spring-oauth2/">Spring OAuth 2</a>
+        </h2>
+        <div class="entry-content">
+          <p>This post is a quick analysis of the Spring implementation of OAuth 2.0 code
+flow (<a href="https://tools.ietf.org/html/rfc6749#section-4.1">RFC6749 Section 4.1</a>) with the minumum application <a href="https://github.com/ndpar/oauth-demo">code</a>.
+The setup consists of the <a href="https://github.com/ndpar/oauth-demo/blob/master/server/src/main/java/com/ndpar/ServerApplication.java">authorization server</a>, the <a href="https://github.com/ndpar/oauth-demo/blob/master/resource/src/main/java/com/ndpar/ResourceApplication.java">resource server</a>,
+and the <a href="https://github.com/ndpar/oauth-demo/blob/master/client/src/main/java/com/ndpar/ClientApplication.java">client</a>.</p>
+
+<p>The flow starts when a user hits
+<a href="http://localhost:9999/client/resource">localhost:9999/client/resource</a></p>
+
+<p><img class="center" src="/images/posts/spring-oauth-sequence.png" /></p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2016/12/24/spring-oauth2/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Nov 7, 2016</span>
 
         <h2>
@@ -227,37 +254,6 @@ using one of the methods below.</p>
         
       </li>
     
-      <li>
-        
-        <span class="post-meta">Oct 13, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/10/13/gc-visualization/">GC visualization</a>
-        </h2>
-        <div class="entry-content">
-          <p>While I was working through the chapter 5.3 of <a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-33.html#%_sec_5.3.2">SICP</a>, I created small visualization of the <em>stop-and-copy</em> garbage collection algorithm.</p>
-
-<p>I start with the following memory structure example.</p>
-
-<p><img class="center" src="/images/posts/gc-01.png" /></p>
-
-<p>The content of the <code class="highlighter-rouge">root</code> register is a pointer <code class="highlighter-rouge">p4</code> to the list of registers <code class="highlighter-rouge">(x y z)</code>. The register <code class="highlighter-rouge">x</code> points to address 6 where improper list <code class="highlighter-rouge">(1 . 2)</code> saved. The register <code class="highlighter-rouge">y</code> points to address 8 where list <code class="highlighter-rouge">(x x)</code> starts. Finally, the register <code class="highlighter-rouge">z</code> points to address 10 where list <code class="highlighter-rouge">(3 4 5)</code> starts. Addresses 1, 3, 5, 9, 11, 13, 15 contain garbage.</p>
-
-<p>After we ran the GC algorithm, we got the following memory structure.</p>
-
-<p><img class="center" src="/images/posts/gc-52.png" /></p>
-
-<p><code class="highlighter-rouge">root</code> now points to address 0, <code class="highlighter-rouge">x</code> to 1, <code class="highlighter-rouge">y</code> to 3, and <code class="highlighter-rouge">z</code> to 6.</p>
-
-
-        </div>
-        
-        <footer>
-          <a rel="full-article" href="/2014/10/13/gc-visualization/">Read on →</a>
-        </footer>
-        
-      </li>
-    
   </ul>
 
   
@@ -291,7 +287,7 @@ using one of the methods below.</p>
     <div class="footer-credit">
 
       <span class="footer-credit-left">
-        Copyright &copy; 2009–2018 Andrey Paramonov
+        Copyright &copy; 2009–2019 Andrey Paramonov
       </span>
 
       <span class="footer-credit-right">

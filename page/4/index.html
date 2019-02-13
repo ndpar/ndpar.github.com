@@ -125,6 +125,28 @@
     
       <li>
         
+        <span class="post-meta">Jul 8, 2013</span>
+
+        <h2>
+          <a class="post-link" href="/2013/07/08/lambdajam-2013/">Lambda Jam 2013</a>
+        </h2>
+        <div class="entry-content">
+          <p>This is my impressionistic non-canonical irregular Clojuresque-Erlangish notes on <a href="http://lambdajam.com">Lambda Jam</a> conference which took place in Chicago on July 8–10, 2013.
+These notes are pretty long, and I don’t split them on purpose.
+If you read them all, you should become overwhelmed and overloaded with the information.
+Only this way you can feel the same I felt on the last day of the conference :)</p>
+
+
+        </div>
+        
+        <footer>
+          <a rel="full-article" href="/2013/07/08/lambdajam-2013/">Read on →</a>
+        </footer>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Jun 11, 2013</span>
 
         <h2>
@@ -231,85 +253,6 @@
         
       </li>
     
-      <li>
-        
-        <span class="post-meta">Mar 9, 2013</span>
-
-        <h2>
-          <a class="post-link" href="/2013/03/09/simple-zookeeper-cluster/">Simple Zookeeper cluster</a>
-        </h2>
-        <div class="entry-content">
-          <p>Sometimes I need to run <a href="http://zookeeper.apache.org">ZooKeeper</a> ensemble on my development box to test my application on the production-like environment. I found that recreating the whole ensemble from scratch is much faster than cleaning it up using ZooKeeper CLI tool. To automate this process I created a bash script which I want to share in this blog post. I hard-coded all the paths in the script using my regular conventions. You might need to change them to yours — it should be fairly straightforward.</p>
-
-<p>Before you can use the script, you need to install ZooKeeper on your box. That’s what I did on my machine</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /opt
-$ sudo mkdir zookeeper
-$ sudo chown -R andrey:admin zookeeper
-$ cd zookeeper
-$ wget http://apache.mirror.rafal.ca/zookeeper/zookeeper-3.4.5/zookeeper-3.4.5.tar.gz
-$ tar xf zookeeper-3.4.5.tar.gz
-$ rm zookeeper-3.4.5.tar.gz
-$ ln -s zookeeper-3.4.5 zookeeper
-</code></pre></div></div>
-
-<p>In the end you should have a ZooKeeper installed in <em>/opt/zookeeper/zookeeper</em> directory.</p>
-
-<p>Now download, chmod, and run the <a href="https://gist.github.com/ndpar/5105486">script</a>. It will create the following files</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/opt/zookeeper/zookeeper/cluster
-├── server1
-│   ├── conf
-│   │   ├── log4j.properties
-│   │   └── zoo.cfg
-│   ├── data
-│   │   └── myid
-│   └── logs
-├── server2
-│   ├── conf
-│   │   ├── log4j.properties
-│   │   └── zoo.cfg
-│   ├── data
-│   │   └── myid
-│   └── logs
-├── server3
-│   ├── conf
-│   │   ├── log4j.properties
-│   │   └── zoo.cfg
-│   ├── data
-│   │   └── myid
-│   └── logs
-├── start.sh
-└── stop.sh
-</code></pre></div></div>
-
-<p>This is the minimum configuration for 3-node ensemble (cluster), which is recommended for production. To start the cluster, run the following command</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /opt/zookeeper/zookeeper
-$ cluster/start.sh
-</code></pre></div></div>
-
-<p>Check the log files to see if the cluster is successfully started</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ tail -f cluster/server{1,2,3}/logs/zookeeper.out
-</code></pre></div></div>
-
-<p>When the cluster is up and running, you can test your application. After you are done, shutdown the cluster using the following command</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cluster/stop.sh
-$ ps -ef | grep java
-</code></pre></div></div>
-
-<p>To recreate a clean cluster, just run the script again</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./zookeeper-init-ensemble.sh
-</code></pre></div></div>
-
-
-        </div>
-        
-      </li>
-    
   </ul>
 
   
@@ -343,7 +286,7 @@ $ ps -ef | grep java
     <div class="footer-credit">
 
       <span class="footer-credit-left">
-        Copyright &copy; 2009–2018 Andrey Paramonov
+        Copyright &copy; 2009–2019 Andrey Paramonov
       </span>
 
       <span class="footer-credit-right">

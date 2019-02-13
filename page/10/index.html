@@ -125,6 +125,121 @@
     
       <li>
         
+        <span class="post-meta">Feb 23, 2010</span>
+
+        <h2>
+          <a class="post-link" href="/2010/02/23/get-started-with-ejabberd/">Get started with ejabberd</a>
+        </h2>
+        <div class="entry-content">
+          <h2 id="installation">Installation</h2>
+
+<p>Before installing ejabberd make sure you have Erlang environment set up. Run the following command and verify the output</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ erl -version
+Erlang (ASYNC_THREADS,HIPE) (BEAM) emulator version 5.10.1
+</code></pre></div></div>
+
+<p>I used to install ejabberd with apt-get command, which is convenient but always several versions behind. That’s why I switched to building from sources. All scripts below are assumed to be run under <em>ejabberd</em> user.</p>
+
+<p>First, create a directory where all ejabberd versions will be installed, if it does not exist yet</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo mkdir /opt/ejabberd
+$ sudo chown -R ejabberd /opt/ejabberd
+</code></pre></div></div>
+
+<p>Download the sources</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd
+$ git clone git@github.com:processone/ejabberd.git
+$ cd ejabberd
+</code></pre></div></div>
+
+<p>Select version you want to install by executing <code class="highlighter-rouge">git branch -a</code> and <code class="highlighter-rouge">git tag --list</code> commands. Let assume we want to install version 2.1.12 from branch 2.1.x</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git checkout 2.1.x
+$ cd src
+</code></pre></div></div>
+
+<p>The next step is optional. If you are going to integrate ejabberd with RabbitMQ, you need to download the source of rabbitmq-xmpp module</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ wget https://raw.github.com/ndpar/rabbitmq-xmpp/rabbitmq3/src/mod_rabbitmq.erl
+$ wget https://raw.github.com/ndpar/rabbitmq-xmpp/rabbitmq3/src/rabbit.hrl
+</code></pre></div></div>
+
+<p>Now we are ready to install ejabberd. To see all available configuration options, run <code class="highlighter-rouge">./configure --help</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./configure --prefix=/opt/ejabberd/ejabberd-2.1.12 --enable-user=ejabberd
+$ make
+$ make install
+$ cd /opt/ejabberd
+$ ln -s ejabberd-2.1.12 ejabberd
+</code></pre></div></div>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Ejabberd comes with reasonable default configuration. Only two lines need to be changed to make it work in your environment.</p>
+
+<p>Open <em>/opt/ejabberd/ejabberd/etc/ejabberd/ejabberd.cfg</em> file and find <em>SERVED HOSTNAMES</em> section. By default Ejabberd is configured for localhost only. Change it to your machine’s DNS name. Here is what I have in my config</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/opt/ejabberd/ejabberd/etc/ejabberd/ejabberd.cfg</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%%%'   SERVED HOSTNAMES</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7b;</span><span class="n">hosts</span><span class="p">,</span> <span class="p">[</span><span class="s">"jabber.ndpar.com"</span><span class="p">]&#x7d;.</span></div></div></pre></div></figure>
+
+<p>The second thing we need to do is to configure admin user. Here is mine, registered for the host I just defined</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/opt/ejabberd/ejabberd/etc/ejabberd/ejabberd.cfg</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%%%'   ACCESS CONTROL LISTS</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7b;</span><span class="n">acl</span><span class="p">,</span> <span class="n">admin</span><span class="p">,</span> <span class="p">&#x7b;</span><span class="n">user</span><span class="p">,</span> <span class="s">"andrey"</span><span class="p">,</span> <span class="s">"jabber.ndpar.com"</span><span class="p">&#x7d;&#x7d;.</span></div></div></pre></div></figure>
+
+<p>Save the config file and start the server</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ /opt/ejabberd/ejabberd/sbin/ejabberdctl start
+</code></pre></div></div>
+
+<p>You can quickly check the log file to see if the server has been started successfully</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ less /opt/ejabberd/ejabberd/var/log/ejabberd/ejabberd.log
+</code></pre></div></div>
+
+<p>If it wasn’t, you might want to enable debug logs</p>
+
+<figure class="code-highlight-figure"><figcaption class="code-highlight-caption"><span class="code-highlight-caption-title">/opt/ejabberd/ejabberd/etc/ejabberd/ejabberd.cfg</span></figcaption><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="c">%%%'   DEBUGGING</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">&#x7b;</span><span class="n">loglevel</span><span class="p">,</span> <span class="mi">5</span><span class="p">&#x7d;.</span></div></div></pre></div></figure>
+
+<p>and restart the server to see more details</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ /opt/ejabberd/ejabberd/sbin/ejabberdctl restart
+</code></pre></div></div>
+
+<h2 id="registering-users">Registering users</h2>
+
+<p>The first (admin) user has to be registered in command line</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cd /opt/ejabberd/ejabberd/sbin
+$ ./ejabberdctl register andrey jabber.ndpar.com ******
+</code></pre></div></div>
+
+<p>This user is the same as admin you configured in the previous section. If you go to <a href="http://localhost:5280/admin">localhost:5280/admin</a> in the browser, you should be able to login with the same password you registered the user</p>
+
+<p><img class="center" src="/images/posts/ejabberd-web.png" /></p>
+
+<p>Now you are ready to add newly created account to your Jabber client. In Adium, for example, go to <em>File</em> -&gt; <em>Add Acount</em> -&gt; <em>Jabber</em> and provide server hostname/IP, JID and password.</p>
+
+<p><img class="center" src="/images/posts/ejabberd-adium-1.png" /></p>
+
+<p><img class="center" src="/images/posts/ejabberd-adium-2.png" /></p>
+
+<p>To really enjoy IM you need more users on your server. The best part here is that you can create new users just from your Jabber client. Simply go to <em>File</em> -&gt; <em>your ejabberd account</em> -&gt; <em>Add User</em></p>
+
+<p><img class="center" src="/images/posts/ejabberd-admin-client.png" /></p>
+
+<p>For other available options please consult <a href="http://www.ejabberd.im">official documentation</a>.</p>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Nov 12, 2009</span>
 
         <h2>
@@ -423,7 +538,7 @@ $ git rebase --continue
     <div class="footer-credit">
 
       <span class="footer-credit-left">
-        Copyright &copy; 2009–2018 Andrey Paramonov
+        Copyright &copy; 2009–2019 Andrey Paramonov
       </span>
 
       <span class="footer-credit-right">

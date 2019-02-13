@@ -180,7 +180,7 @@ mkdir newcerts
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl ca -config openssl-ca.cnf -policy signing_policy -extensions signing_req -out servercert.pem -passin file:pass.txt -infiles servercert.csr
 </code></pre></div></div>
 
-<h2 id="rfc7292-pkcs-12"><a href="https://tools.ietf.org/html/rfc7292">RFC7292</a> (PKCS #12)</h2>
+<h2 id="pkcs-12-rfc7292">PKCS #12 (<a href="https://tools.ietf.org/html/rfc7292">RFC7292</a>)</h2>
 
 <p>Package a PKCS8 private key into PKCS12 keystore</p>
 
@@ -223,7 +223,24 @@ mkdir newcerts
 openssl pkcs12 -in keystore.p12 -out keystore.pem
 </code></pre></div></div>
 
-<h2 id="rfc2315-pkcs-7-and-rfc5652-cms"><a href="https://tools.ietf.org/html/rfc2315">RFC2315</a> (PKCS #7) and <a href="https://tools.ietf.org/html/rfc5652">RFC5652</a> (CMS)</h2>
+<h2 id="elliptic-curves-rfc5915">Elliptic Curves (<a href="https://tools.ietf.org/html/rfc5915">RFC5915</a>)</h2>
+
+<p>Generate elliptic curve private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl ecparam -genkey -name prime256v1 -noout -out private.key
+</code></pre></div></div>
+
+<p>Convert elliptic curve private key to PKCS8 PEM format</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs8 -topk8 -in private.key -out private.pem -nocrypt
+</code></pre></div></div>
+
+<p>Extract elliptic curve public key from the private key</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl ec -in private.pem -pubout -out public.pem
+</code></pre></div></div>
+
+<h2 id="pkcs-7-rfc2315-and-cms-rfc5652">PKCS #7 (<a href="https://tools.ietf.org/html/rfc2315">RFC2315</a>) and CMS (<a href="https://tools.ietf.org/html/rfc5652">RFC5652</a>)</h2>
 
 <p>Encrypt the file for the recipient in CMS format</p>
 
@@ -266,7 +283,7 @@ openssl cms -decrypt -inkey serverkey.pem -in file.pem -inform pem -out file
     <div class="footer-credit">
 
       <span class="footer-credit-left">
-        Copyright &copy; 2009–2018 Andrey Paramonov
+        Copyright &copy; 2009–2019 Andrey Paramonov
       </span>
 
       <span class="footer-credit-right">

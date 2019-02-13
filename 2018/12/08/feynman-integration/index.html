@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Side Notes</title>
+  <title>Feynman Integration - Side Notes</title>
 
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/assets/main.css">
@@ -111,26 +111,78 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-</style>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
-<div class="container">
-  <h1>404</h1>
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Feynman Integration</h1>
+    <p class="post-meta">
+      <time datetime="2018-12-08T10:05:33-05:00" itemprop="datePublished">
+        
+        Dec 8, 2018
+      </time>
+      
+      
+        • <span>Categories: Math</span>
+      
+      
+        • <span>Tags: math</span>
+      </p>
+  </header>
 
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
-</div>
+  <div class="post-content" itemprop="articleBody">
+    <p>Problem: Calculate the integral</p>
+
+<script type="math/tex; mode=display">\int\limits_{0}^{\infty} \frac{\sin x}{x}\mathrm{d}x</script>
+
+<p>Feynman’s method: Solve the following equation for $t$</p>
+
+<script type="math/tex; mode=display">I(t) = \int\limits_{0}^{\infty} \frac{\sin x}{x} e^{-tx}\mathrm{d}x</script>
+
+<p>and calculate $I(0)$.</p>
+
+<!-- more -->
+
+<p>The trick here is to differentiate $I(t)$ under the integral sign and solve the differential equation.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+I'(t) & = \int\limits_{0}^{\infty} \frac{\partial}{\partial t} \left( \frac{\sin x}{x} e^{-tx} \right) \mathrm{d}x \\
+      & = - \int\limits_{0}^{\infty} e^{-tx}\sin{x} \;\mathrm{d}x = \frac{1}{t}\int\limits_{0}^{\infty} \sin{x} \;\mathrm{d} e^{-tx} \\
+      & = \frac{1}{t}\left[ \left. e^{-tx} \sin{x} \right|_{0}^{\infty} - \int\limits_{0}^{\infty} e^{-tx} \mathrm{d} \sin{x} \right] \\
+      & = - \frac{1}{t} \int\limits_{0}^{\infty} e^{-tx} \cos{x} \;\mathrm{d} x = \frac{1}{t^2} \int\limits_{0}^{\infty} \cos{x} \;\mathrm{d} e^{-tx} \\
+      & = \frac{1}{t^2}\left[ \left. e^{-tx} \cos{x} \right|_{0}^{\infty} - \int\limits_{0}^{\infty} e^{-tx} \mathrm{d} \cos{x} \right] \\
+      & = \frac{1}{t^2}\left[ -1 + \int\limits_{0}^{\infty} e^{-tx} \sin{x} \;\mathrm{d}x \right] = \frac{1}{t^2} \left( -1 - I'(t) \right)
+\end{align*} %]]></script>
+
+<p>And here is the differential equation for $I(t)$</p>
+
+<script type="math/tex; mode=display">I'(t) = \frac{-1}{t^2 + 1}</script>
+
+<p>which can be solved by integration, using the substitution method.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+I(t) & = - \int \frac{\mathrm{d}t}{t^2 + 1} \\
+     & = \left| t = \tan{y}, \quad \mathrm{d}t = \frac{\mathrm{d}y}{\cos^2{y}}, \quad t^2 + 1 = \frac{1}{\cos^2{y}} \right| \\
+     & = - \int \mathrm{d}y = -y + C = C - \arctan{t}
+\end{align*} %]]></script>
+
+<p>We can find the constant $C$ by computing $I(+\infty)$</p>
+
+<script type="math/tex; mode=display">0 = \int\limits_{0}^{\infty} \frac{\sin x}{x} e^{-\infty x}\mathrm{d}x = I(+\infty) = C - \arctan(+\infty) = C - \frac{\pi}{2}</script>
+
+<p>The final solution for $I(t)$ is</p>
+
+<script type="math/tex; mode=display">I(t) = \frac{\pi}{2} - \arctan{t}</script>
+
+<p>We can now calculate the original integral</p>
+
+<script type="math/tex; mode=display">\int\limits_{0}^{\infty} \frac{\sin x}{x}\mathrm{d}x = I(0) = \frac{\pi}{2} - \arctan(0) = \frac{\pi}{2}</script>
+
+  </div>
+
+  
+</article>
 
       </div>
     </main>

@@ -125,6 +125,61 @@
     
       <li>
         
+        <span class="post-meta">Aug 6, 2011</span>
+
+        <h2>
+          <a class="post-link" href="/2011/08/06/thomaes-function/">Thomae&#39;s function</a>
+        </h2>
+        <div class="entry-content">
+          <p><a href="http://en.wikipedia.org/wiki/Thomae%27s_function">Thomae’s function</a> (a.k.a. Riemann function) is defined on the interval (0, 1) as follows</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+f(x) = \left\{
+\begin{array}{l l}
+  1/q & \quad \text{if $x = p/q$ is rational and $gcd(p, q) = 1$}\\
+  0 & \quad \text{if $x$ is irrational}\\
+\end{array} \right. %]]></script>
+
+<p>Here is the graph of this function with some points highlighted as plus symbols for better view.</p>
+
+<p><img class="center" src="/images/posts/thomae.jpg" /></p>
+
+<p>This function has interesting property: it’s continuous at all irrational points. It’s easy to see this if you notice that for any positive <em>ε</em> there is a finite number of dots above the line <em>y</em> = <em>ε</em>. That means for any irrational number <em>x</em><sub>0</sub> you can always construct a <em>δ</em>-neighbourhood that doesn’t contain any dot from the area above the line <em>y</em> = <em>ε</em>.</p>
+
+<p><img class="center" src="/images/posts/thomae-e-d.jpg" /></p>
+
+<p>To generate the data file with point coordinates I wrote Common Lisp program:</p>
+
+<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="nb">defun</span> <span class="nv">rational-numbers</span> <span class="p">(</span><span class="nv">max-denominator</span><span class="p">)</span>
+</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">result</span> <span class="p">(</span><span class="nb">list</span><span class="p">)))</span>
+</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">q</span> <span class="nv">from</span> <span class="mi">2</span> <span class="nv">to</span> <span class="nv">max-denominator</span> <span class="nb">do</span>
+</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">      <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">p</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="p">(</span><span class="nb">1-</span> <span class="nv">q</span><span class="p">)</span> <span class="nb">do</span>
+</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">(</span><span class="nb">pushnew</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">p</span> <span class="nv">q</span><span class="p">)</span> <span class="nv">result</span><span class="p">)))</span>
+</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="nv">result</span><span class="p">))</span>
+</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="nb">defun</span> <span class="nv">thomae-rational-points</span> <span class="p">(</span><span class="nv">abscissae</span><span class="p">)</span>
+</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p">(</span><span class="nb">mapcar</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">list</span> <span class="nv">x</span> <span class="p">(</span><span class="nb">/</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">denominator</span> <span class="nv">x</span><span class="p">))))</span> <span class="nv">abscissae</span><span class="p">))</span>
+</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="nb">defun</span> <span class="nv">thomae</span> <span class="p">(</span><span class="nv">max-denominator</span><span class="p">)</span>
+</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">points</span> <span class="p">(</span><span class="nv">thomae-rational-points</span> <span class="p">(</span><span class="nv">rational-numbers</span> <span class="nv">max-denominator</span><span class="p">))))</span>
+</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nc">stream</span> <span class="s">"thomae.dat"</span> <span class="ss">:direction</span> <span class="ss">:output</span><span class="p">)</span>
+</div></div><div data-line="14" class="code-highlight-row numbered"><div class="code-highlight-line">      <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">point</span> <span class="nv">in</span> <span class="nv">points</span> <span class="nb">do</span>
+</div></div><div data-line="15" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="p">(</span><span class="nb">format</span> <span class="nc">stream</span> <span class="s">"~4$ ~4$~%"</span> <span class="p">(</span><span class="nb">first</span> <span class="nv">point</span><span class="p">)</span> <span class="p">(</span><span class="nb">second</span> <span class="nv">point</span><span class="p">))))))</span>
+</div></div><div data-line="16" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="17" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="p">(</span><span class="nv">thomae</span> <span class="mi">500</span><span class="p">)</span></div></div></pre></div></figure>
+
+<p>To create the images I used <a href="http://www.gnuplot.info/">gnuplot</a> commands:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>plot "thomae.dat" using 1:2 with dots
+plot "thomae.dat" using 1:2 with points
+</code></pre></div></div>
+
+<p>and Photoshop.</p>
+
+
+        </div>
+        
+      </li>
+    
+      <li>
+        
         <span class="post-meta">Jun 27, 2011</span>
 
         <h2>
@@ -285,88 +340,6 @@ B/B
         
       </li>
     
-      <li>
-        
-        <span class="post-meta">Jun 1, 2011</span>
-
-        <h2>
-          <a class="post-link" href="/2011/06/01/reversing-groovy-switch-statement/">Reversing Groovy switch statement</a>
-        </h2>
-        <div class="entry-content">
-          <p>Recently I’ve been working on a Groovy code that had many methods with long multibranch conditionals like this:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="nf">parse</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">options</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">if</span> <span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s1">'A'</span><span class="o">))</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">parseARule</span> <span class="n">message</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="mi">2</span><span class="o">))</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">parseSmallDigitRule</span> <span class="n">message</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">...</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">options</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">something</span><span class="o">))</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">parseSomeRule</span> <span class="n">message</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span> <span class="k">else</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">parseSomeOtherRule</span> <span class="n">message</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>Although this code is working, it is hard to see which branch is called under which condition. It would be much better if we could replace this code with something like Lisp <code class="highlighter-rouge">cond</code> macro. The best candidate for such a task in Groovy would be a <code class="highlighter-rouge">switch</code> statement. If we could only refactor the code above to something like following, it would significantly improve readability:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="nf">parse</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">options</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">switch</span> <span class="o">(</span><span class="n">options</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">case</span> <span class="s1">'A'</span> <span class="o">:</span> <span class="k">return</span> <span class="n">parseARule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">case</span> <span class="mi">2</span>   <span class="o">:</span> <span class="k">return</span> <span class="n">parseSmallDigitRule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="o">...</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">case</span> <span class="o">...</span> <span class="o">:</span> <span class="k">return</span> <span class="n">parseSomeRule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">default</span>  <span class="o">:</span> <span class="k">return</span> <span class="n">parseSomeOtherRule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>Unfortunately, this code doesn’t work out of the box in Groovy, but it works if we do some metaprogramming.</p>
-
-<p>The way <code class="highlighter-rouge">switch</code> statement works in Groovy is a bit <a href="http://docs.codehaus.org/display/GROOVY/Logical+Branching#LogicalBranching-switchstatement">different</a> than in Java. Instead of equals() it uses isCase() method to match case-value and switch-value. The default implementation of isCase() method falls back to equals() method, but some classes, including <a href="http://groovy.codehaus.org/groovy-jdk/java/util/Collection.html#isCase(java.lang.Object)">Collection</a>, override this behaviour. That’s why in Groovy you can do things like this:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="k">switch</span> <span class="o">(</span><span class="n">value</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="o">[</span><span class="s1">'A'</span><span class="o">,</span><span class="s1">'E'</span><span class="o">,</span><span class="s1">'I'</span><span class="o">,</span><span class="s1">'O'</span><span class="o">,</span><span class="s1">'U'</span><span class="o">]</span> <span class="o">:</span> <span class="k">return</span> <span class="s1">'vowel'</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="mi">0</span><span class="o">..</span><span class="mi">9</span>                  <span class="o">:</span> <span class="k">return</span> <span class="s1">'digit'</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">case</span> <span class="n">Date</span>                  <span class="o">:</span> <span class="k">return</span> <span class="s1">'date'</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="k">default</span>                    <span class="o">:</span> <span class="k">return</span> <span class="s1">'something else'</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>For our purposes we need some sort of reverse <code class="highlighter-rouge">switch</code>, where collection is used as a switch-value, and String and Integer are used as a case-value. To do this we need to override default implementation of isCase() method on String and Integer classes. It’s not possible in Java, but is very easy in Groovy. You can change method implementation globally by replacing it in corresponding meta class, or locally with the help of categories. Let’s create a category that swaps object and subject of isCase() method:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kd">class</span> <span class="nc">CaseCategory</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isCase</span><span class="o">(</span><span class="n">String</span> <span class="n">string</span><span class="o">,</span> <span class="n">Collection</span> <span class="n">col</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">reverseCase</span><span class="o">(</span><span class="n">string</span><span class="o">,</span> <span class="n">col</span><span class="o">)</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isCase</span><span class="o">(</span><span class="n">Integer</span> <span class="n">integer</span><span class="o">,</span> <span class="n">Collection</span> <span class="n">col</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">reverseCase</span><span class="o">(</span><span class="n">integer</span><span class="o">,</span> <span class="n">col</span><span class="o">)</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="c1">// Add more overloaded methods here if needed</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line"> </div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">reverseCase</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="n">right</span><span class="o">.</span><span class="na">isCase</span><span class="o">(</span><span class="n">left</span><span class="o">)</span>
-</div></div><div data-line="12" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span>
-</div></div><div data-line="13" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>Now we can use this category to achieve the goal we stated at the beginning of this post:</p>
-
-<figure class="code-highlight-figure"><div class="code-highlight"><pre class="code-highlight-pre"><div data-line="1" class="code-highlight-row numbered"><div class="code-highlight-line"><span class="kt">def</span> <span class="nf">parse</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">options</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="2" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="n">use</span> <span class="o">(</span><span class="n">CaseCategory</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="3" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="k">switch</span> <span class="o">(</span><span class="n">options</span><span class="o">)</span> <span class="o">&#x7b;</span>
-</div></div><div data-line="4" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="k">case</span> <span class="s1">'A'</span> <span class="o">:</span> <span class="k">return</span> <span class="n">parseARule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="5" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="k">case</span> <span class="mi">2</span>   <span class="o">:</span> <span class="k">return</span> <span class="n">parseSmallDigitRule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="6" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="o">...</span>
-</div></div><div data-line="7" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="k">case</span> <span class="o">...</span> <span class="o">:</span> <span class="k">return</span> <span class="n">parseSomeRule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="8" class="code-highlight-row numbered"><div class="code-highlight-line">                <span class="k">default</span>  <span class="o">:</span> <span class="k">return</span> <span class="n">parseSomeOtherRule</span><span class="o">(</span><span class="n">message</span><span class="o">)</span>
-</div></div><div data-line="9" class="code-highlight-row numbered"><div class="code-highlight-line">            <span class="o">&#x7d;</span>
-</div></div><div data-line="10" class="code-highlight-row numbered"><div class="code-highlight-line">        <span class="o">&#x7d;</span>
-</div></div><div data-line="11" class="code-highlight-row numbered"><div class="code-highlight-line">    <span class="o">&#x7d;</span></div></div></pre></div></figure>
-
-<p>If you are comfortable with global method replacement, you can amend String and Integer meta classes. In this case you don’t need to wrap <code class="highlighter-rouge">switch</code> statement with <code class="highlighter-rouge">use</code> keyword.</p>
-
-
-        </div>
-        
-      </li>
-    
   </ul>
 
   
@@ -400,7 +373,7 @@ B/B
     <div class="footer-credit">
 
       <span class="footer-credit-left">
-        Copyright &copy; 2009–2018 Andrey Paramonov
+        Copyright &copy; 2009–2019 Andrey Paramonov
       </span>
 
       <span class="footer-credit-right">
